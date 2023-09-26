@@ -14,7 +14,7 @@
  * Block fits on the image (inputs are feasible)
 **/
 void Block::Build(PNG& img, unsigned int x, unsigned int y, unsigned int dimension) {
-	// complete your implementation below
+	int x = 7;// complete your implementation below
     
 }
 

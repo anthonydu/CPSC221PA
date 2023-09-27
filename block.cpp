@@ -15,6 +15,7 @@
  **/
 void Block::Build(PNG &img, unsigned int x, unsigned int y, unsigned int dimension)
 {
+	data.clear();
 	for (int i = x; i < x + dimension; i++)
 	{
 		vector<RGBAPixel> row;
@@ -39,7 +40,7 @@ void Block::Render(PNG &img, unsigned int x, unsigned int y, bool full) const
 	{
 		for (int j = 0; j < data.at(i).size(); j++)
 		{
-			*(img.getPixel(i, j)) = data.at(i).at(j);
+			*(img.getPixel(x + i, y + j)) = full ? data.at(i).at(j) : GetAverageColor();
 		}
 	}
 }
@@ -76,8 +77,25 @@ unsigned int Block::Dimension() const
  **/
 RGBAPixel Block::GetAverageColor() const
 {
-	// replace the statement below with your implementation
-	return RGBAPixel();
+	int r = 0;
+	int g = 0;
+	int b = 0;
+	int a = 0;
+	for (int i = 0; i < data.size(); i++)
+	{
+		for (int j = 0; j < data.at(i).size(); j++)
+		{
+			r += data.at(i).at(j).r;
+			g += data.at(i).at(j).g;
+			b += data.at(i).at(j).b;
+			a += data.at(i).at(j).a;
+		}
+	}
+	r /= data.size() * data.size();
+	g /= data.size() * data.size();
+	b /= data.size() * data.size();
+	a /= data.size() * data.size();
+	return RGBAPixel(r, g, b, a);
 }
 
 /**
@@ -85,5 +103,12 @@ RGBAPixel Block::GetAverageColor() const
  **/
 void Block::FillAverage()
 {
-	// complete your implementation below
+	RGBAPixel avg = GetAverageColor();
+	for (int i = 0; i < data.size(); i++)
+	{
+		for (int j = 0; j < data.at(i).size(); j++)
+		{
+			data.at(i).at(j) = avg;
+		}
+	}
 }

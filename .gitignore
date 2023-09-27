@@ -4,4 +4,6 @@
 
 pa1
 
-*-output/*
+*-output
+
+.vscode

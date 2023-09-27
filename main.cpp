@@ -231,13 +231,20 @@ void TestRender()
 	PNG alphabetpng;
 	PNG output(40, 40);
 	alphabetpng.readFromFile("images-original/alphabet-240x40.png");
-	Block *block = new Block();
-	block->Build(alphabetpng, 0, 0, 40);
-	block->Render(output, 0, 0, true);
+	Block block;
+	block.Build(alphabetpng, 0, 0, 40);
+	block.Render(output, 0, 0, true);
 	output.writeToFile("test-output/render-a.png");
-	delete block;
-	block = new Block();
-	block->Build(alphabetpng, 200, 0, 40);
-	block->Render(output, 0, 0, true);
+	block.Build(alphabetpng, 200, 0, 40);
+	block.Render(output, 0, 0, true);
 	output.writeToFile("test-output/render-f.png");
+
+	output.resize(120, 40);
+	block.Build(alphabetpng, 80, 0, 40);
+	block.Render(output, 0, 0, false);
+	block.Build(alphabetpng, 120, 0, 40);
+	block.Render(output, 40, 0, false);
+	block.Build(alphabetpng, 160, 0, 40);
+	block.Render(output, 80, 0, false);
+	output.writeToFile("test-output/render-avg.png");
 }

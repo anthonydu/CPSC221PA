@@ -4,6 +4,6 @@
 
 pa1
 
-*-output
+images-output/**/*.png
 
 .vscode

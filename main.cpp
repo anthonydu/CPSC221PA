@@ -25,7 +25,7 @@ void TestChainReverse();
 void TestChainFlipHorizontal();
 void TestChainFlipVertical();
 void TestChainBlockify();
-void TestRender();
+void TestBlock();
 
 /**
  * Program entry point
@@ -52,7 +52,9 @@ int main(void)
 	TestChainBlockify();
 	cout << "TestChainBlockify completed.\n"
 			 << endl;
-	TestRender();
+	TestBlock();
+	cout << "TestBlock completed.\n"
+			 << endl;
 
 	return 1;
 }
@@ -226,7 +228,7 @@ void TestChainBlockify()
 	cout << "Leaving TestChainBlockify..." << endl;
 }
 
-void TestRender()
+void TestBlock()
 {
 	PNG alphabetpng;
 	PNG output(40, 40);
@@ -234,10 +236,19 @@ void TestRender()
 	Block block;
 	block.Build(alphabetpng, 0, 0, 40);
 	block.Render(output, 0, 0, true);
-	output.writeToFile("test-output/render-a.png");
+	output.writeToFile("images-output/block-output/a.png");
 	block.Build(alphabetpng, 200, 0, 40);
 	block.Render(output, 0, 0, true);
-	output.writeToFile("test-output/render-f.png");
+	output.writeToFile("images-output/block-output/f.png");
+
+	block.FlipHorizontal();
+	block.Render(output, 0, 0, true);
+	output.writeToFile("images-output/block-output/f-flip-h.png");
+
+	block.FlipHorizontal();
+	block.FlipVertical();
+	block.Render(output, 0, 0, true);
+	output.writeToFile("images-output/block-output/f-flip-v.png");
 
 	output.resize(120, 40);
 	block.Build(alphabetpng, 80, 0, 40);
@@ -246,5 +257,5 @@ void TestRender()
 	block.Render(output, 40, 0, false);
 	block.Build(alphabetpng, 160, 0, 40);
 	block.Render(output, 80, 0, false);
-	output.writeToFile("test-output/render-avg.png");
+	output.writeToFile("images-output/block-output/avg.png");
 }

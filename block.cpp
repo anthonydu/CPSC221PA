@@ -18,12 +18,12 @@ void Block::Build(PNG &img, unsigned int x, unsigned int y, unsigned int dimensi
 	data.clear();
 	for (int i = x; i < x + dimension; i++)
 	{
-		vector<RGBAPixel> row;
+		vector<RGBAPixel> col;
 		for (int j = y; j < y + dimension; j++)
 		{
-			row.push_back(*(img.getPixel(i, j)));
+			col.push_back(*(img.getPixel(i, j)));
 		}
-		data.push_back(row);
+		data.push_back(col);
 	}
 }
 
@@ -51,7 +51,14 @@ void Block::Render(PNG &img, unsigned int x, unsigned int y, bool full) const
  **/
 void Block::FlipHorizontal()
 {
-	// complete your implementation below
+	int dim = data.size();
+	for (int x = 0; x < dim / 2; x++)
+	{
+		vector<RGBAPixel> left = data.at(x);
+		vector<RGBAPixel> right = data.at(dim - 1 - x);
+		data.at(x) = right;
+		data.at(dim - 1 - x) = left;
+	}
 }
 
 /**
@@ -60,7 +67,17 @@ void Block::FlipHorizontal()
  **/
 void Block::FlipVertical()
 {
-	// complete your implementation below
+	int dim = data.size();
+	for (int x = 0; x < dim; x++)
+	{
+		for (int y = 0; y < dim / 2; y++)
+		{
+			RGBAPixel upper = data.at(x).at(y);
+			RGBAPixel lower = data.at(x).at(dim - 1 - y);
+			data.at(x).at(y) = lower;
+			data.at(x).at(dim - 1 - y) = upper;
+		}
+	}
 }
 
 /**

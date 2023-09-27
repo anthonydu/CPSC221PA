@@ -36,9 +36,10 @@ void Block::Build(PNG &img, unsigned int x, unsigned int y, unsigned int dimensi
  **/
 void Block::Render(PNG &img, unsigned int x, unsigned int y, bool full) const
 {
-	for (int i = 0; i < data.size(); i++)
+	int dim = Dimension();
+	for (int i = 0; i < dim; i++)
 	{
-		for (int j = 0; j < data.at(i).size(); j++)
+		for (int j = 0; j < dim; j++)
 		{
 			*(img.getPixel(x + i, y + j)) = full ? data.at(i).at(j) : GetAverageColor();
 		}
@@ -51,7 +52,7 @@ void Block::Render(PNG &img, unsigned int x, unsigned int y, bool full) const
  **/
 void Block::FlipHorizontal()
 {
-	int dim = data.size();
+	int dim = Dimension();
 	for (int x = 0; x < dim / 2; x++)
 	{
 		vector<RGBAPixel> left = data.at(x);
@@ -67,7 +68,7 @@ void Block::FlipHorizontal()
  **/
 void Block::FlipVertical()
 {
-	int dim = data.size();
+	int dim = Dimension();
 	for (int x = 0; x < dim; x++)
 	{
 		for (int y = 0; y < dim / 2; y++)
@@ -85,8 +86,7 @@ void Block::FlipVertical()
  */
 unsigned int Block::Dimension() const
 {
-	// replace the statement below with your implementation
-	return 0;
+	return data.size();
 }
 
 /**

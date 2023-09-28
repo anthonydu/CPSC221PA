@@ -20,6 +20,10 @@
  **/
 Chain::Chain(PNG &img, unsigned int nodedimension)
 {
+	Block* block = new Block();
+	block->Build(img,0,0,nodedimension);
+	NW = new Node(*block);
+
 }
 
 /**
@@ -46,7 +50,7 @@ PNG Chain::Render(unsigned int cols, bool full)
  **/
 void Chain::InsertBack(const Block &ndata)
 { 
-	struct Node* newNode = new Node(ndata);
+	Node* newNode = new Node(ndata);
 	newNode->prev = SE->prev;
 	newNode->next = NULL;
 	SE->next = newNode;
@@ -64,7 +68,7 @@ void Chain::InsertBack(const Block &ndata)
  **/
 void Chain::Reverse()
 {
-	if(!NW) return;
+	if(IsEmpty()) return;
 	Node* p1= NW;
 	Node* p2;
 	while(p1!=NULL){
@@ -98,7 +102,7 @@ void Chain::Reverse()
  **/
 void Chain::FlipHorizontal(unsigned int cols)
 {
-	// flip
+	
 }
 
 /**
@@ -152,7 +156,11 @@ void Chain::Clear()
  **/
 void Chain::Copy(const Chain &other)
 {
-	// complete your implementation below
+	Chain* pt = new Chain(other);
+	Chain newchain = Chain(other);
+	delete pt;
+	pt = NULL;
+	
 }
 
 /**

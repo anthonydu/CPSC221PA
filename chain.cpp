@@ -98,7 +98,7 @@ void Chain::Reverse()
  **/
 void Chain::FlipHorizontal(unsigned int cols)
 {
-	// complete your implementation below
+	// flip
 }
 
 /**

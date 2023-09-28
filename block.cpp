@@ -122,9 +122,10 @@ RGBAPixel Block::GetAverageColor() const
 void Block::FillAverage()
 {
 	RGBAPixel avg = GetAverageColor();
-	for (int i = 0; i < data.size(); i++)
+	int dim = Dimension();
+	for (int i = 0; i < dim; i++)
 	{
-		for (int j = 0; j < data.at(i).size(); j++)
+		for (int j = 0; j < dim; j++)
 		{
 			data.at(i).at(j) = avg;
 		}

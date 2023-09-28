@@ -76,7 +76,6 @@ void Chain::Reverse()
 	p1=NW;
 	NW = SE;
 	SE = p1;
-	
 }
 
 /**

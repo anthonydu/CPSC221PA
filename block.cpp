@@ -98,9 +98,10 @@ RGBAPixel Block::GetAverageColor() const
 	int g = 0;
 	int b = 0;
 	int a = 0;
-	for (int i = 0; i < data.size(); i++)
+	int dim = Dimension();
+	for (int i = 0; i < dim; i++)
 	{
-		for (int j = 0; j < data.at(i).size(); j++)
+		for (int j = 0; j < dim; j++)
 		{
 			r += data.at(i).at(j).r;
 			g += data.at(i).at(j).g;
@@ -108,10 +109,10 @@ RGBAPixel Block::GetAverageColor() const
 			a += data.at(i).at(j).a;
 		}
 	}
-	r /= data.size() * data.size();
-	g /= data.size() * data.size();
-	b /= data.size() * data.size();
-	a /= data.size() * data.size();
+	r /= dim * dim;
+	g /= dim * dim;
+	b /= dim * dim;
+	a /= dim * dim;
 	return RGBAPixel(r, g, b, a);
 }
 
@@ -121,9 +122,10 @@ RGBAPixel Block::GetAverageColor() const
 void Block::FillAverage()
 {
 	RGBAPixel avg = GetAverageColor();
-	for (int i = 0; i < data.size(); i++)
+	int dim = Dimension();
+	for (int i = 0; i < dim; i++)
 	{
-		for (int j = 0; j < data.at(i).size(); j++)
+		for (int j = 0; j < dim; j++)
 		{
 			data.at(i).at(j) = avg;
 		}

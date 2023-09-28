@@ -64,20 +64,19 @@ void Chain::InsertBack(const Block &ndata)
  **/
 void Chain::Reverse()
 {
-	Node* prev =NULL;
-	Node* start= NW;
-	Node* cur= NW;
-	if(!cur) return;
-
-	while(cur!=NULL){
-		prev= cur;
-		cur = cur->next;
+	if(!NW) return;
+	Node* p1= NW;
+	Node* p2;
+	while(p1!=NULL){
+		p2= p1->next;
+		p1->next=p2->prev;
+		p1->prev = p2;
+		p1=p2;
 	}
-	if (cur==NULL){
-		NW = SE;
-		SE = start;
-	}
-	return NW;
+	p1=NW;
+	NW = SE;
+	SE = p1;
+	
 }
 
 /**

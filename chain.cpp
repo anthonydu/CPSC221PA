@@ -156,10 +156,13 @@ void Chain::Clear()
  **/
 void Chain::Copy(const Chain &other)
 {
-	Chain* pt = new Chain(other);
-	Chain newchain = Chain(other);
-	delete pt;
-	pt = NULL;
+	Chain* pt1 = new Chain();
+	*pt1 = other;
+	Chain* pt = new Chain();
+	*pt = Chain(other);
+	delete pt1;
+	pt1 = NULL;
+
 	
 }
 

@@ -50,7 +50,7 @@ void Chain::InsertBack(const Block &ndata)
 	newNode->prev = SE->prev;
 	newNode->next = NULL;
 	SE->next = newNode;
-	(*SE)= newNode;
+	SE= newNode;
 
 }
 

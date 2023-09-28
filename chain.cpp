@@ -104,18 +104,18 @@ void Chain::Reverse()
 {
 	if (IsEmpty())
 		return;
-	Node *p1 = NW;
-	Node *p2;
-	while (p1 != NULL)
+	Node *p = NW;
+	while (p)
 	{
-		p2 = p1->next;
-		p1->next = p2->prev;
-		p1->prev = p2;
-		p1 = p2;
+		Node *next = p->next;
+		Node *prev = p->prev;
+		p->next = prev;
+		p->prev = next;
+		p = next;
 	}
-	p1 = NW;
+	Node *temp = NW;
 	NW = SE;
-	SE = p1;
+	SE = temp;
 }
 
 /**

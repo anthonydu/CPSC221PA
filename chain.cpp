@@ -77,7 +77,7 @@ void Chain::Reverse()
 		NW = SE;
 		SE = start;
 	}
-	return NW
+	return NW;
 }
 
 /**

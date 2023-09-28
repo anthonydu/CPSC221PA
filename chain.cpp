@@ -20,9 +20,35 @@
  **/
 Chain::Chain(PNG &img, unsigned int nodedimension)
 {
+	/*
 	Block *block = new Block();
 	block->Build(img, 0, 0, nodedimension);
 	NW = new Node(*block);
+	*/
+
+	length_ = 0;
+	int cols = img.width() / nodedimension;
+	int rows = img.height() / nodedimension;
+	Node *prev = NULL;
+	Node *node;
+	for (int x = 0; x < cols; x++)
+	{
+		for (int y = 0; y < rows; y++)
+		{
+			Block block;
+			block.Build(img, x * nodedimension, y * nodedimension, nodedimension);
+			node = new Node(block);
+			node->prev = prev;
+			if (prev)
+				prev->next = node;
+			else
+				NW = node;
+			prev = node;
+			length_ += 1;
+		}
+	}
+	node->next = NULL;
+	SE = node;
 }
 
 /**
@@ -40,8 +66,24 @@ Chain::Chain(PNG &img, unsigned int nodedimension)
  **/
 PNG Chain::Render(unsigned int cols, bool full)
 {
-	// replace the line below with your implementation
-	return PNG();
+	int rows = Length() / cols + (Length() % cols == 0 ? 0 : 1);
+	PNG img(cols * NodeDimension(), rows * NodeDimension());
+	Node *curr = NW;
+	unsigned x = 0;
+	unsigned y = 0;
+	while (curr)
+	{
+		curr->data.Render(img, x * NodeDimension(), y * NodeDimension(), true);
+		if (x == cols - 1)
+		{
+			y += 1;
+			x = 0;
+		}
+		else
+			x += 1;
+		curr = curr->next;
+	}
+	return img;
 }
 
 /**
@@ -155,16 +197,20 @@ void Chain::Clear()
  **/
 void Chain::Copy(const Chain &other)
 {
-	Chain* pt1 = new Chain();
+	Chain *pt1 = new Chain();
 	*pt1 = other;
-	Chain* pt = new Chain();
+	Chain *pt = new Chain();
 	*pt = Chain(other);
 	delete pt1;
 	pt1 = NULL;
-	
 }
 
 /**
  * If you have declared any private helper functions in chain_private.h,
  * add your completed implementations below.
  **/
+
+int Chain::NodeDimension()
+{
+	return NW->data.Dimension();
+}

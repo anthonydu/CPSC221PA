@@ -20,12 +20,6 @@
  **/
 Chain::Chain(PNG &img, unsigned int nodedimension)
 {
-	/*
-	Block *block = new Block();
-	block->Build(img, 0, 0, nodedimension);
-	NW = new Node(*block);
-	*/
-
 	length_ = 0;
 	int cols = img.width() / nodedimension;
 	int rows = img.height() / nodedimension;

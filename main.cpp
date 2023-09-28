@@ -4,7 +4,7 @@
  *              for CPSC 221 2023W1 PA1
  *
  *              Add or modify test code as needed.
- * 
+ *
  *              THIS FILE WILL NOT BE SUBMITTED.
  */
 
@@ -25,25 +25,36 @@ void TestChainReverse();
 void TestChainFlipHorizontal();
 void TestChainFlipVertical();
 void TestChainBlockify();
+void TestBlock();
 
 /**
  * Program entry point
  */
-int main(void) {
+int main(void)
+{
 
 	// add or remove calls to testing functions as needed
 	TestChainRenderFull();
-	cout << "TestChainRenderFull completed.\n" << endl;
+	cout << "TestChainRenderFull completed.\n"
+			 << endl;
 	TestChainRenderTiny();
-	cout << "TestChainRenderTiny completed.\n" << endl;
+	cout << "TestChainRenderTiny completed.\n"
+			 << endl;
 	TestChainReverse();
-	cout << "TestChainReverse completed.\n" << endl;
+	cout << "TestChainReverse completed.\n"
+			 << endl;
 	TestChainFlipHorizontal();
-	cout << "TestChainFlipHorizontal completed.\n" << endl;
+	cout << "TestChainFlipHorizontal completed.\n"
+			 << endl;
 	TestChainFlipVertical();
-	cout << "TestChainFlipVertical completed.\n" << endl;
+	cout << "TestChainFlipVertical completed.\n"
+			 << endl;
 	TestChainBlockify();
-	cout << "TestChainBlockify completed.\n" << endl;
+	cout << "TestChainBlockify completed.\n"
+			 << endl;
+	TestBlock();
+	cout << "TestBlock completed.\n"
+			 << endl;
 
 	return 1;
 }
@@ -52,7 +63,8 @@ int main(void) {
  * Test function implementations
  */
 
-void TestChainRenderFull() {
+void TestChainRenderFull()
+{
 	cout << "Entered TestChainRenderFull." << endl;
 	// load a PNG file
 	PNG alphabetpng;
@@ -89,7 +101,8 @@ void TestChainRenderFull() {
 	cout << "Leaving TestChainRenderFull..." << endl;
 }
 
-void TestChainRenderTiny() {
+void TestChainRenderTiny()
+{
 	cout << "Entered TestChainRenderTiny." << endl;
 	// load a PNG file
 	PNG alphabetpng;
@@ -110,7 +123,8 @@ void TestChainRenderTiny() {
 	cout << "Leaving TestChainRenderTiny..." << endl;
 }
 
-void TestChainReverse() {
+void TestChainReverse()
+{
 	cout << "Entered TestChainReverse." << endl;
 
 	// load a PNG file
@@ -136,7 +150,8 @@ void TestChainReverse() {
 	cout << "Leaving TestChainReverse..." << endl;
 }
 
-void TestChainFlipHorizontal() {
+void TestChainFlipHorizontal()
+{
 	cout << "Entered TestChainFlipHorizontal." << endl;
 	// load a PNG file
 	PNG alphabetpng;
@@ -161,7 +176,8 @@ void TestChainFlipHorizontal() {
 	cout << "Leaving TestChainFlipHorizontal..." << endl;
 }
 
-void TestChainFlipVertical() {
+void TestChainFlipVertical()
+{
 	cout << "Entered TestChainFlipVertical." << endl;
 	// load a PNG file
 	PNG alphabetpng;
@@ -186,7 +202,8 @@ void TestChainFlipVertical() {
 	cout << "Leaving TestChainFlipVertical..." << endl;
 }
 
-void TestChainBlockify() {
+void TestChainBlockify()
+{
 	cout << "Entered TestChainBlockify." << endl;
 	// load a PNG file
 	PNG alphabetpng;
@@ -209,4 +226,36 @@ void TestChainBlockify() {
 	cout << "done." << endl;
 
 	cout << "Leaving TestChainBlockify..." << endl;
+}
+
+void TestBlock()
+{
+	PNG alphabetpng;
+	PNG output(40, 40);
+	alphabetpng.readFromFile("images-original/alphabet-240x40.png");
+	Block block;
+	block.Build(alphabetpng, 0, 0, 40);
+	block.Render(output, 0, 0, true);
+	output.writeToFile("images-output/block-output/a.png");
+	block.Build(alphabetpng, 200, 0, 40);
+	block.Render(output, 0, 0, true);
+	output.writeToFile("images-output/block-output/f.png");
+
+	block.FlipHorizontal();
+	block.Render(output, 0, 0, true);
+	output.writeToFile("images-output/block-output/f-flip-h.png");
+
+	block.FlipHorizontal();
+	block.FlipVertical();
+	block.Render(output, 0, 0, true);
+	output.writeToFile("images-output/block-output/f-flip-v.png");
+
+	output.resize(120, 40);
+	block.Build(alphabetpng, 80, 0, 40);
+	block.Render(output, 0, 0, false);
+	block.Build(alphabetpng, 120, 0, 40);
+	block.Render(output, 40, 0, false);
+	block.Build(alphabetpng, 160, 0, 40);
+	block.Render(output, 80, 0, false);
+	output.writeToFile("images-output/block-output/avg.png");
 }

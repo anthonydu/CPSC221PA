@@ -4,7 +4,7 @@
  *              for CPSC 221 2023W1 PA1
  *
  *              THIS FILE WILL BE SUBMITTED.
-**/
+ **/
 
 #include <math.h>
 
@@ -17,10 +17,9 @@
  * @param img the input image
  * @param nodedimension number of pixels along the width and height of the Block region
  * @pre input image's width and height are evenly divisible by nodedimension
-**/
-Chain::Chain(PNG& img, unsigned int nodedimension) {
-	// complete your implementation below
-    
+ **/
+Chain::Chain(PNG &img, unsigned int nodedimension)
+{
 }
 
 /**
@@ -35,18 +34,24 @@ Chain::Chain(PNG& img, unsigned int nodedimension) {
  * @param cols the number of Blocks to use for the width of the image
  * @param full whether to render all pixel data into a full-size image,
  *             or block averages into a tiny image
-**/
-PNG Chain::Render(unsigned int cols, bool full) {
+ **/
+PNG Chain::Render(unsigned int cols, bool full)
+{
 	// replace the line below with your implementation
 	return PNG();
 }
 
 /**
  * Inserts a new Node containing ndata at the back of the Chain
-**/
-void Chain::InsertBack(const Block& ndata) {
-	// complete your implementation below
-    
+ **/
+void Chain::InsertBack(const Block &ndata)
+{ 
+	struct Node* newNode = new Node(ndata);
+	newNode->prev = SE->prev;
+	newNode->next = NULL;
+	SE->next = newNode;
+	(*SE)= newNode;
+
 }
 
 /**
@@ -54,12 +59,25 @@ void Chain::InsertBack(const Block& ndata) {
  * pointer assignments. You may not deallocate or allocate any Nodes.
  * Example:
  *	before:	NW -> A <-> B <-> C <-> D <-> E <-> F <-> G <-> H <- SE
- *  
+ *
  *  after:	NW -> H <-> G <-> F <-> E <-> D <-> C <-> B <-> A <- SE
-**/
-void Chain::Reverse() {
-	// complete your implementation below
-    
+ **/
+void Chain::Reverse()
+{
+	Node* prev =NULL;
+	Node* start= NW;
+	Node* cur= NW;
+	if(!cur) return;
+
+	while(cur!=NULL){
+		prev= cur;
+		cur = cur->next;
+	}
+	if (cur==NULL){
+		NW = SE;
+		SE = start;
+	}
+	return NW
 }
 
 /**
@@ -71,18 +89,18 @@ void Chain::Reverse() {
  *
  *		NW -> A> <-> B> <-> C> <->
  *            D> <-> E> <-> F> <- SE
- * 
+ *
  *  after, visualized with 3 columns (2 rows):
- * 
+ *
  *		NW -> <C <-> <B <-> <A <->
  *            <F <-> <E <-> <D <- SE
- * 
+ *
  * @param cols number of Blocks to use for the initial width of the image
  * @pre length_ is divisible by cols (i.e. no "partially-filled" rows)
-**/
-void Chain::FlipHorizontal(unsigned int cols) {
+ **/
+void Chain::FlipHorizontal(unsigned int cols)
+{
 	// complete your implementation below
-    
 }
 
 /**
@@ -91,40 +109,40 @@ void Chain::FlipHorizontal(unsigned int cols) {
  * You may not deallocate or allocate any Nodes.
  * Example, length = 6:
  *	before, flipping with 3 columns (2 rows):
- *                         
+ *
  *      NW -> A <-> B <-> C <->
  *            D <-> E <-> F <- SE
- * 
+ *
  *  after, visualized with 3 columns (2 rows):
- * 
+ *
  *      NW -> D <-> E <-> F <->
  *            A <-> B <-> C <- SE
- * 
+ *
  * @param cols number of Blocks to use for the initial width of the image
  * @pre length_ is divisible by cols (i.e. no "partially-filled" rows)
-**/
-void Chain::FlipVertical(unsigned int cols) {
+ **/
+void Chain::FlipVertical(unsigned int cols)
+{
 	// complete your implementation below
-    
 }
 
 /**
  * Produces a blocky, pixellated effect (in a rendered image) by replacing each
  * block's pixel data with the average color of the block.
-**/
-void Chain::Blockify() {
+ **/
+void Chain::Blockify()
+{
 	// complete your implementation below
-    
 }
 
 /**
  * Destroys all dynamically allocated memory associated with
  * this Chain object. Called by destructor and operator=.
  * You must complete its implementation for PA1.
-**/
-void Chain::Clear() {
+ **/
+void Chain::Clear()
+{
 	// complete your implementation below
-    
 }
 
 /**
@@ -133,14 +151,13 @@ void Chain::Clear() {
  * operator=.
  * You must complete its implementation for PA1.
  * @param other The Chain to be copied.
-**/
-void Chain::Copy(const Chain& other) {
+ **/
+void Chain::Copy(const Chain &other)
+{
 	// complete your implementation below
-    
 }
 
 /**
  * If you have declared any private helper functions in chain_private.h,
  * add your completed implementations below.
-**/
-
+ **/

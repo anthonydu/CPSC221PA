@@ -14,7 +14,7 @@
  * Block fits on the image (inputs are feasible)
 **/
 void Block::Build(PNG& img, unsigned int x, unsigned int y, unsigned int dimension) {
-	int x = 7;// complete your implementation below
+	
     
 }
 
@@ -26,7 +26,7 @@ void Block::Build(PNG& img, unsigned int x, unsigned int y, unsigned int dimensi
  *               or the average color to a single pixel in the target PNG.
 **/
 void Block::Render(PNG& img, unsigned int x, unsigned int y, bool full) const {
-	// complete your implementation below
+	
     
 }
 
@@ -35,7 +35,7 @@ void Block::Render(PNG& img, unsigned int x, unsigned int y, bool full) const {
  * across the vertical axis through its middle.
 **/
 void Block::FlipHorizontal() {
-	// complete your implementation below
+	
     
 }
 

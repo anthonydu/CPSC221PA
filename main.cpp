@@ -253,15 +253,6 @@ void TestBlock()
 	block.FlipVertical();
 	block.Render(output, 0, 0, true);
 	output.writeToFile("images-output/block-output/f-flip-v.png");
-
-	output.resize(120, 40);
-	block.Build(alphabetpng, 80, 0, 40);
-	block.Render(output, 0, 0, false);
-	block.Build(alphabetpng, 120, 0, 40);
-	block.Render(output, 40, 0, false);
-	block.Build(alphabetpng, 160, 0, 40);
-	block.Render(output, 80, 0, false);
-	output.writeToFile("images-output/block-output/avg.png");
 }
 
 void TestChain()

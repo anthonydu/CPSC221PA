@@ -152,6 +152,47 @@ void Chain::Reverse()
  **/
 void Chain::FlipHorizontal(unsigned int cols)
 {
+	bool shouldBreak = false;
+	Node *pl = NW;
+	Node *pr = NW;
+	for (int i = 0; i < cols - 1; i++)
+		pr = pr->next;
+	while (true)
+	{
+		if (pl == pr)
+		{
+			pl->data.FlipHorizontal();
+			if (shouldBreak)
+				break;
+			for (int i = 0; i <= cols / 2; i++)
+				pl = pl->next;
+			for (int i = 0; i <= cols / 2 + cols - 1; i++)
+				pr = pr->next;
+			if (pr->next == NULL)
+				shouldBreak = true;
+			continue;
+		}
+		if (pl->prev == pr)
+		{
+			if (shouldBreak)
+				break;
+			for (int i = 0; i < cols / 2; i++)
+				pl = pl->next;
+			for (int i = 0; i < cols / 2 + cols; i++)
+				pr = pr->next;
+			if (pr->next == NULL)
+				shouldBreak = true;
+			continue;
+		}
+		Block left = pl->data;
+		Block right = pr->data;
+		pl->data = right;
+		pr->data = left;
+		pl->data.FlipHorizontal();
+		pr->data.FlipHorizontal();
+		pl = pl->next;
+		pr = pr->prev;
+	}
 }
 
 /**

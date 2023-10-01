@@ -303,4 +303,14 @@ void TestChain()
 
 	Chain one(alphabetpng, 20);
 	one.Render(6, true).writeToFile("images-output/chain-output/one.png");
+
+	Chain newChain;
+	Block block;
+	block.Build(alphabetpng, 0, 0, 40);
+	newChain.InsertBack(block);
+	newChain.FlipHorizontal(1);
+	newChain.Render(1, true).writeToFile("images-output/chain-output/1h.png");
+	newChain.FlipHorizontal(1);
+	newChain.FlipVertical(1);
+	newChain.Render(1, true).writeToFile("images-output/chain-output/1v.png");
 }

@@ -235,8 +235,9 @@ void Chain::FlipHorizontal(unsigned int cols)
  **/
 void Chain::FlipVertical(unsigned int cols)
 {
-	// the decision to make the pointers start from the middle is
-	// because it provides the easiest way to detect where the end is
+	// the decision to make the pointers start from the middle rows is
+	// because it provides the easiest way to detect when we have reached the end
+	// no matter if the number of rows is odd or even
 	Node *pt = NW; // pointer top
 	Node *pb = NW; // pointer bottom
 	int rows = Length() / cols;

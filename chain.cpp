@@ -283,7 +283,7 @@ void Chain::FlipVertical(unsigned int cols)
 		}
 		// flip the blocks
 		pb->data.FlipVertical();
-		// move pl and pr to the right
+		// move pt and pb to the right
 		pt = pt->next;
 		pb = pb->next;
 	}

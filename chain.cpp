@@ -66,13 +66,16 @@ PNG Chain::Render(unsigned int cols, bool full)
 	if (IsEmpty())
 		return PNG();
 	int rows = Length() / cols + (Length() % cols == 0 ? 0 : 1);
-	PNG img(cols * NodeDimension(), rows * NodeDimension());
+	PNG img(full ? cols * NodeDimension() : cols, full ? rows * NodeDimension() : rows);
 	Node *curr = NW;
 	unsigned x = 0;
 	unsigned y = 0;
 	while (curr)
 	{
-		curr->data.Render(img, x * NodeDimension(), y * NodeDimension(), true);
+		if (full)
+			curr->data.Render(img, x * NodeDimension(), y * NodeDimension(), true);
+		else
+			curr->data.Render(img, x, y, false);
 		if (x == cols - 1)
 		{
 			y += 1;
@@ -155,7 +158,7 @@ void Chain::FlipHorizontal(unsigned int cols)
 	bool reachedLastRow = false;
 	Node *pl = NW; // pointer left
 	Node *pr = NW; // pointer right
-	// Move pr to the right most node of the first row
+	// move pr to the right most node of the first row
 	for (int i = 0; i < cols - 1; i++)
 		pr = pr->next;
 	while (true)
@@ -172,7 +175,7 @@ void Chain::FlipHorizontal(unsigned int cols)
 			for (int i = 0; i <= cols / 2; i++)
 				pl = pl->next;
 			// move pr to the right most node of the next row
-			for (int i = 0; i <= cols / 2 + cols - 1; i++)
+			for (int i = 0; i < cols / 2 + cols; i++)
 				pr = pr->next;
 			// if the next row is the last row, set reachedLastRow
 			if (pr->next == NULL)
@@ -232,7 +235,59 @@ void Chain::FlipHorizontal(unsigned int cols)
  **/
 void Chain::FlipVertical(unsigned int cols)
 {
-	// complete your implementation below
+	Node *pt = NW; // pointer top
+	Node *pb = NW; // pointer bottom
+	int rows = Length() / cols;
+	// even
+	if (rows % 2 == 0)
+	{
+		// move pt to the left most node of the upper middle row
+		for (int i = 0; i < (rows / 2 - 1) * cols; i++)
+			pt = pt->next;
+		// move pb to the left most node of the lower middle row
+		for (int i = 0; i < rows / 2 * cols; i++)
+			pb = pb->next;
+	}
+	// odd
+	else
+	{
+		// move pt and pb to the left most node of the middle row
+		for (int i = 0; i < rows / 2 * cols; i++)
+		{
+			pt = pt->next;
+			pb = pb->next;
+		}
+	}
+	bool reachedLastCol = false;
+	for (int x = 0; !reachedLastCol; x++)
+	{
+		// if the next col is the last col, set reachedLastCol
+		if (pb->next == NULL)
+			reachedLastCol = true;
+		// if pt and pb reaches a new column
+		if (x == cols)
+		{
+			x = 0;
+			// move pt back two rows
+			for (int i = 0; i < cols * 2; i++)
+				pt = pt->prev;
+		}
+		if (pt != pb)
+		{
+			// swap the blocks
+			Block upper = pt->data;
+			Block lower = pb->data;
+			pt->data = lower;
+			pb->data = upper;
+			// prevent double flips
+			pt->data.FlipVertical();
+		}
+		// flip the blocks
+		pb->data.FlipVertical();
+		// move pl and pr to the right
+		pt = pt->next;
+		pb = pb->next;
+	}
 }
 
 /**
@@ -241,7 +296,12 @@ void Chain::FlipVertical(unsigned int cols)
  **/
 void Chain::Blockify()
 {
-	// complete your implementation below
+	Node *p = NW;
+	while (p)
+	{
+		p->data.FillAverage();
+		p = p->next;
+	}
 }
 
 /**

@@ -40,12 +40,19 @@ void Block::Build(PNG &img, unsigned int x, unsigned int y, unsigned int dimensi
 void Block::Render(PNG &img, unsigned int x, unsigned int y, bool full) const
 {
 	int dim = Dimension();
-	for (int i = 0; i < dim; i++)
+	if (full)
 	{
-		for (int j = 0; j < dim; j++)
+		for (int i = 0; i < dim; i++)
 		{
-			*(img.getPixel(x + i, y + j)) = full ? data.at(i).at(j) : GetAverageColor();
+			for (int j = 0; j < dim; j++)
+			{
+				*(img.getPixel(x + i, y + j)) = data.at(i).at(j);
+			}
 		}
+	}
+	else
+	{
+		*(img.getPixel(x, y)) = GetAverageColor();
 	}
 }
 

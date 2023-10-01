@@ -118,8 +118,6 @@ void Chain::InsertBack(const Block &ndata)
  **/
 void Chain::Reverse()
 {
-	if (IsEmpty())
-		return;
 	Node *p = NW;
 	while (p)
 	{
@@ -195,6 +193,13 @@ void Chain::Blockify()
  **/
 void Chain::Clear()
 {
+	Node *p = NW;
+	while (p)
+	{
+		Node *next = p->next;
+		delete p;
+		p = next;
+	}
 	NW = NULL;
 	SE = NULL;
 	length_ = 0;
@@ -210,8 +215,6 @@ void Chain::Clear()
 void Chain::Copy(const Chain &other)
 {
 	length_ = 0;
-	if (other.IsEmpty())
-		return;
 	Node *p = other.NW;
 	while (p)
 	{
@@ -229,7 +232,7 @@ int Chain::NodeDimension()
 {
 	if (IsEmpty())
 	{
-		cout << "Empty" << endl;
+		cerr << "Cannot get node dimension of an empty chain!" << endl;
 		return -1;
 	}
 	return NW->data.Dimension();

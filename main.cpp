@@ -274,4 +274,12 @@ void TestChain()
 	zero.writeToFile("images-output/chain-output/zero.png");
 	PNG wide = other.Render(10, true);
 	wide.writeToFile("images-output/chain-output/wide.png");
+
+	other.FlipHorizontal(1);
+	other.Render(1, true).writeToFile("images-output/chain-output/h1.png");
+	other.FlipVertical(1);
+	other.Render(1, true).writeToFile("images-output/chain-output/v1.png");
+
+	Chain one(alphabetpng, 20);
+	one.Render(6, true).writeToFile("images-output/chain-output/one.png");
 }

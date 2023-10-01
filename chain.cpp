@@ -236,7 +236,7 @@ void Chain::FlipHorizontal(unsigned int cols)
 void Chain::FlipVertical(unsigned int cols)
 {
 	// the decision to make the pointers start from the middle is
-	// because it provides the easiest way to detect when to end the loop
+	// because it provides the easiest way to detect where the end is
 	Node *pt = NW; // pointer top
 	Node *pb = NW; // pointer bottom
 	int rows = Length() / cols;
@@ -260,12 +260,12 @@ void Chain::FlipVertical(unsigned int cols)
 			pb = pb->next;
 		}
 	}
-	bool reachedLastCol = false;
-	for (int x = 0; !reachedLastCol; x++)
+	bool reachedLastPair = false;
+	for (int x = 0; !reachedLastPair; x++)
 	{
-		// if the next col is the last col, set reachedLastCol
+		// if the next col is the last col, set reachedLastPair
 		if (pb->next == NULL)
-			reachedLastCol = true;
+			reachedLastPair = true;
 		// if pt and pb reaches a new column
 		if (x == cols)
 		{

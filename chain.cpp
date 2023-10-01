@@ -153,6 +153,8 @@ void Chain::Reverse()
  **/
 void Chain::FlipHorizontal(unsigned int cols)
 {
+	// the decision to make the pointers start from the both ends of each row is
+	// because it provides the easiest way to detect when to move to the next row
 	bool reachedLastRow = false;
 	Node *pl = NW; // pointer left
 	Node *pr = NW; // pointer right
@@ -233,6 +235,8 @@ void Chain::FlipHorizontal(unsigned int cols)
  **/
 void Chain::FlipVertical(unsigned int cols)
 {
+	// the decision to make the pointers start from the middle is
+	// because it provides the easiest way to detect when to end the loop
 	Node *pt = NW; // pointer top
 	Node *pb = NW; // pointer bottom
 	int rows = Length() / cols;

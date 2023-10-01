@@ -165,6 +165,9 @@ void Chain::FlipHorizontal(unsigned int cols)
 		pr = pr->next;
 	while (true)
 	{
+		// if the next row is the last row, set reachedLastRow
+		if (pr->next == NULL)
+			reachedLastRow = true;
 		// odd: if pl and pr meet
 		if (pl == pr)
 		{
@@ -179,9 +182,6 @@ void Chain::FlipHorizontal(unsigned int cols)
 			// move pr to the right most node of the next row
 			for (int i = 0; i < cols / 2 + cols; i++)
 				pr = pr->next;
-			// if the next row is the last row, set reachedLastRow
-			if (pr->next == NULL)
-				reachedLastRow = true;
 			// continue the loop without any swaps
 			continue;
 		}
@@ -197,9 +197,6 @@ void Chain::FlipHorizontal(unsigned int cols)
 			// move pr to the right most node of the next row
 			for (int i = 0; i < cols / 2 + cols; i++)
 				pr = pr->next;
-			// if the next row is the last row, set reachedLastRow
-			if (pr->next == NULL)
-				reachedLastRow = true;
 			// continue the loop without any swaps
 			continue;
 		}

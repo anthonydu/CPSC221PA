@@ -165,7 +165,7 @@ void Chain::FlipHorizontal(unsigned int cols)
 		pr = pr->next;
 	while (true)
 	{
-		// if the next row is the last row, set reachedLastRow
+		// if the this row is the last row, set reachedLastRow
 		if (pr->next == NULL)
 			reachedLastRow = true;
 		// odd: if pl and pr meet
@@ -260,12 +260,8 @@ void Chain::FlipVertical(unsigned int cols)
 			pb = pb->next;
 		}
 	}
-	bool reachedLastPair = false;
-	for (int x = 0; !reachedLastPair; x++)
+	for (int x = 0; true; x++)
 	{
-		// if the next col is the last col, set reachedLastPair
-		if (pb->next == NULL)
-			reachedLastPair = true;
 		// if pt and pb reaches a new column
 		if (x == cols)
 		{
@@ -290,6 +286,9 @@ void Chain::FlipVertical(unsigned int cols)
 		// move pt and pb to the right
 		pt = pt->next;
 		pb = pb->next;
+		// break if the end has been reached
+		if (pb == NULL)
+			break;
 	}
 }
 

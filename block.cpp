@@ -7,6 +7,9 @@
  **/
 
 #include "block.h"
+#include <iostream>
+
+using namespace std;
 
 /**
  * Creates a square Block that is dimension x dimension pixels in size,

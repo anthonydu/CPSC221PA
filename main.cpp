@@ -26,6 +26,7 @@ void TestChainFlipHorizontal();
 void TestChainFlipVertical();
 void TestChainBlockify();
 void TestBlock();
+void TestChain();
 
 /**
  * Program entry point
@@ -54,6 +55,9 @@ int main(void)
 			 << endl;
 	TestBlock();
 	cout << "TestBlock completed.\n"
+			 << endl;
+	TestChain();
+	cout << "TestChain completed.\n"
 			 << endl;
 
 	return 1;
@@ -258,4 +262,18 @@ void TestBlock()
 	block.Build(alphabetpng, 160, 0, 40);
 	block.Render(output, 80, 0, false);
 	output.writeToFile("images-output/block-output/avg.png");
+}
+
+void TestChain()
+{
+	PNG alphabetpng;
+	alphabetpng.readFromFile("images-original/alphabet-240x40.png");
+
+	Chain other(alphabetpng, 40);
+	Chain copy(other);
+
+	PNG o = other.Render(4, true);
+	o.writeToFile("images-output/chain-output/other.png");
+	PNG c = copy.Render(4, true);
+	c.writeToFile("images-output/chain-output/copy.png");
 }

@@ -7,8 +7,11 @@
  **/
 
 #include <math.h>
+#include <iostream>
 
 #include "chain.h"
+
+using namespace std;
 
 /**
  * Constructs a Chain from an input image
@@ -60,6 +63,8 @@ Chain::Chain(PNG &img, unsigned int nodedimension)
  **/
 PNG Chain::Render(unsigned int cols, bool full)
 {
+	if (IsEmpty())
+		return PNG();
 	int rows = Length() / cols + (Length() % cols == 0 ? 0 : 1);
 	PNG img(cols * NodeDimension(), rows * NodeDimension());
 	Node *curr = NW;
@@ -86,10 +91,21 @@ PNG Chain::Render(unsigned int cols, bool full)
 void Chain::InsertBack(const Block &ndata)
 {
 	Node *newNode = new Node(ndata);
-	newNode->prev = SE->prev;
-	newNode->next = NULL;
-	SE->next = newNode;
-	SE = newNode;
+	if (IsEmpty())
+	{
+		NW = newNode;
+		SE = newNode;
+		newNode->prev = NULL;
+		newNode->next = NULL;
+	}
+	else
+	{
+		newNode->prev = SE;
+		newNode->next = NULL;
+		SE->next = newNode;
+		SE = newNode;
+	}
+	length_ += 1;
 }
 
 /**
@@ -179,7 +195,9 @@ void Chain::Blockify()
  **/
 void Chain::Clear()
 {
-	// complete your implementation below
+	NW = NULL;
+	SE = NULL;
+	length_ = 0;
 }
 
 /**
@@ -191,12 +209,15 @@ void Chain::Clear()
  **/
 void Chain::Copy(const Chain &other)
 {
-	Chain *pt1 = new Chain();
-	*pt1 = other;
-	Chain *pt = new Chain();
-	*pt = Chain(other);
-	delete pt1;
-	pt1 = NULL;
+	length_ = 0;
+	if (other.IsEmpty())
+		return;
+	Node *p = other.NW;
+	while (p)
+	{
+		InsertBack(p->data);
+		p = p->next;
+	}
 }
 
 /**
@@ -206,5 +227,10 @@ void Chain::Copy(const Chain &other)
 
 int Chain::NodeDimension()
 {
+	if (IsEmpty())
+	{
+		cout << "Empty" << endl;
+		return -1;
+	}
 	return NW->data.Dimension();
 }

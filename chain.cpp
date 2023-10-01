@@ -270,6 +270,7 @@ void Chain::FlipVertical(unsigned int cols)
 			for (int i = 0; i < cols * 2; i++)
 				pt = pt->prev;
 		}
+		// if pt and pb are not on the same row
 		if (pt != pb)
 		{
 			// swap the blocks

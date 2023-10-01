@@ -24,7 +24,10 @@ using namespace std;
 Chain::Chain(PNG &img, unsigned int nodedimension)
 {
 	if (img.width() | img.height() == 0)
+	{
 		Chain();
+		return;
+	}
 	length_ = 0;
 	int cols = img.width() / nodedimension;
 	int rows = img.height() / nodedimension;

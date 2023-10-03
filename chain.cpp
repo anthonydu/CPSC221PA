@@ -155,63 +155,26 @@ void Chain::Reverse()
  **/
 void Chain::FlipHorizontal(unsigned int cols)
 {
-	// the decision to make the pointers start from the both ends of each row is
-	// because it provides the easiest way to detect when to move to the next row
-	bool reachedLastRow = false;
-	Node *pl = NW; // pointer left
-	Node *pr = NW; // pointer right
-	// move pr to the right most node of the first row
-	for (int i = 0; i < cols - 1; i++)
-		pr = pr->next;
-	while (true)
+	Chain chain = Chain();
+	Node *p = NW;
+	while (p)
 	{
-		// if the this row is the last row, set reachedLastRow
-		if (pr->next == NULL)
-			reachedLastRow = true;
-		// odd: if pl and pr meet
-		if (pl == pr)
+		Chain row = Chain();
+		for (int i = 0; i < cols; i++)
 		{
-			// flip the middle block
-			pl->data.FlipHorizontal();
-			// if this is the last row, break the loop
-			if (reachedLastRow)
-				break;
-			// move pl to the left most node of the next row
-			for (int i = 0; i <= cols / 2; i++)
-				pl = pl->next;
-			// move pr to the right most node of the next row
-			for (int i = 0; i < cols / 2 + cols; i++)
-				pr = pr->next;
-			// continue the loop without any swaps
-			continue;
+			row.InsertBack(p->data);
+			p = p->next;
 		}
-		// even: if pr passes pl
-		if (pl->prev == pr)
+		row.Reverse();
+		Node *p2 = row.NW;
+		while (p2)
 		{
-			// if this is the last row, break the loop
-			if (reachedLastRow)
-				break;
-			// move pl to the left most node of the next row
-			for (int i = 0; i < cols / 2; i++)
-				pl = pl->next;
-			// move pr to the right most node of the next row
-			for (int i = 0; i < cols / 2 + cols; i++)
-				pr = pr->next;
-			// continue the loop without any swaps
-			continue;
+			p2->data.FlipHorizontal();
+			chain.InsertBack(p2->data);
+			p2 = p2->next;
 		}
-		// swap the blocks
-		Block left = pl->data;
-		Block right = pr->data;
-		pl->data = right;
-		pr->data = left;
-		// flip the blocks
-		pl->data.FlipHorizontal();
-		pr->data.FlipHorizontal();
-		// move pl and pr towards the center
-		pl = pl->next;
-		pr = pr->prev;
 	}
+	Copy(chain);
 }
 
 /**

@@ -28,9 +28,9 @@ Chain::Chain(PNG &img, unsigned int nodedimension)
 	int rows = img.height() / nodedimension;
 	Node *prev = NULL;
 	Node *node;
-	for (int y = 0; y < rows; y++)
+	for (int x = 0; x < cols; x++)
 	{
-		for (int x = 0; x < cols; x++)
+		for (int y = 0; y < rows; y++)
 		{
 			Block block;
 			block.Build(img, x * nodedimension, y * nodedimension, nodedimension);
@@ -63,8 +63,6 @@ Chain::Chain(PNG &img, unsigned int nodedimension)
  **/
 PNG Chain::Render(unsigned int cols, bool full)
 {
-	if (!cols)
-		return PNG();
 	int rows = Length() / cols + (Length() % cols == 0 ? 0 : 1);
 	PNG img(full ? cols * NodeDimension() : cols, full ? rows * NodeDimension() : rows);
 	Node *curr = NW;
@@ -155,89 +153,112 @@ void Chain::Reverse()
  **/
 void Chain::FlipHorizontal(unsigned int cols)
 {
-	// the decision to make the pointers start from the both ends of each row is
-	// because it provides the easiest way to detect when to move to the next row
-	bool reachedLastRow = false;
-	Node *pl = NW; // pointer left
-	Node *pr = NW; // pointer right
-	for (int i = 0; i < cols - 1; i++)
-	// move pr to the right most node of the first row
-		pr = pr->next;
-	while (true)
-	{
-		// if the this row is the last row, set reachedLastRow
-		if (pr->next == NULL)
-			reachedLastRow = true;
-		// odd: if pl and pr meet
-		if (pl == pr)
-		{
-			// flip the middle block
-			pl->data.FlipHorizontal();
-			// if this is the last row, break the loop
-			if (reachedLastRow)
-				break;
-			// move pl to the left most node of the next row
-			for (int i = 0; i <= cols / 2; i++)
-				pl = pl->next;
-			// move pr to the right most node of the next row
-			for (int i = 0; i < cols / 2 + cols; i++)
-				pr = pr->next;
-			// continue the loop without any swaps
-			continue;
-		}
-		// even: if pr passes pl
-		if (pl->prev == pr)
-		{
-			// if this is the last row, break the loop
-			if (reachedLastRow)
-				break;
-			// move pl to the left most node of the next row
-			for (int i = 0; i < cols / 2; i++)
-				pl = pl->next;
-			// move pr to the right most node of the next row
-			for (int i = 0; i < cols / 2 + cols; i++)
-				pr = pr->next;
-			// continue the loop without any swaps
-			continue;
-		}
-		// swap the blocks
-		Block left = pl->data;
-		Block right = pr->data;
-		pl->data = right;
-		pr->data = left;
-		// flip the blocks
-		pl->data.FlipHorizontal();
-		pr->data.FlipHorizontal();
-		// move pl and pr towards the center
-		pl = pl->next;
-		pr = pr->prev;
-	}
-
-	// if(!NW) return;
-	// int rows = length_/cols * (length_%cols !=0);
-
-	// Node* temp=NW, *thisRow, *lastRow=NULL;
-	// for(int l = 0; l<length_; l++){
-	// 	if(l== cols-1) NW=temp;
-	// 	if(l==(rows-1)*cols) SE=temp;
-
-	// 	Node* n =temp->next;
-	// 	temp->next = temp->prev;
-	// 	temp->prev = n;
-	// 	temp->data.FlipHorizontal();
-
-	// 	if(l%cols == 0)
-	// 		thisRow = temp;
-	// 	if((l+1)%cols==0){
-	// 		temp->prev = lastRow;
-	// 		if(lastRow) lastRow->next = temp;
-	// 		lastRow = thisRow;
-	// 		lastRow->next = n;
+	// bool reachedLastRow = false;
+	// Node *pl = NW; // pointer left
+	// Node *pr = NW; // pointer right
+	// for (int i = 0; i < cols - 1; i++)
+	// // move pr to the right most node of the first row
+	// 	pr = pr->next;
+	// while (true)
+	// {
+	// 	// odd: if pl and pr meet
+	// 	if (pl == pr)
+	// 	{
+	// 		// flip the middle block
+	// 		pl->data.FlipHorizontal();
+	// 		// if this is the last row, break the loop
+	// 		if (reachedLastRow)
+	// 			break;
+	// 		// move pl to the left most node of the next row
+	// 		for (int i = 0; i <= cols / 2; i++)
+	// 			pl = pl->next;
+	// 		// move pr to the right most node of the next row
+	// 		for (int i = 0; i < cols / 2 + cols; i++)
+	// 			pr = pr->next;
+	// 		// if the next row is the last row, set reachedLastRow
+	// 		if (pr->next == NULL)
+	// 			reachedLastRow = true;
+	// 		// continue the loop without any swaps
+	// 		continue;
 	// 	}
-
-	// 	temp = n;
-
+	// 	// even: if pr passes pl
+	// 	if (pl->prev == pr)
+	// 	{
+	// 		// if this is the last row, break the loop
+	// 		if (reachedLastRow)
+	// 			break;
+	// 		// move pl to the left most node of the next row
+	// 		for (int i = 0; i < cols / 2; i++)
+	// 			pl = pl->next;
+	// 		// move pr to the right most node of the next row
+	// 		for (int i = 0; i < cols / 2 + cols; i++)
+	// 			pr = pr->next;
+	// 		// if the next row is the last row, set reachedLastRow
+	// 		if (pr->next LL)
+	// 			reachedLastRow = true;
+	// 		// continue the loop without any swaps
+	// 		continue;
+	// 	}
+	// 	// swap the blocks
+	// 	Block left = pl->data;
+	// 	Block right = pr->data;
+	// 	pl->data = right;
+	// 	pr->data = left;
+	// 	// flip the blocks
+	// 	pl->data.FlipHorizontal();
+	// 	pr->data.FlipHorizontal();
+	// 	// move pl and pr towards the center
+	// 	pl = pl->next;
+	// 	pr = pr->prev;
 	// }
+
+	unsigned int rows = length_ / cols;
+ Node *curr = NW;
+    for (unsigned int y = 1; y <= rows; y++) {
+  Node *last = curr;
+  unsigned int counter = cols - 1;
+  while (counter > 0) {
+   last = last->next;
+   counter-=1;
+  }
+  if (curr->prev) {
+   curr->prev->next = last;
+  }
+
+  last->prev = curr->prev;
+  
+  for (unsigned int i = 1; i <= cols; i++) {
+   Node *nextNode;
+   curr->data.FlipHorizontal();
+   if (curr == last) {
+    nextNode = curr;
+    unsigned int counter = cols;
+    while (counter > 0) {
+     nextNode = nextNode->next;
+     counter--;
+    }
+   } else {
+    nextNode = curr->next;
+    curr->next = last->next;
+    curr->prev = last;
+    if (last->next != NULL) {
+     last->next->prev = curr;
+    }
+    last->next = curr;
+   }
+   
+   curr = nextNode;
+  }
+ }
+ 
+ unsigned int counter = cols - 1;
+ while (counter > 0) {
+  NW = NW->prev;
+  SE = SE->next;
+  counter--;
+ }
+	
+	
 }
 	
 
@@ -261,9 +282,6 @@ void Chain::FlipHorizontal(unsigned int cols)
  **/
 void Chain::FlipVertical(unsigned int cols)
 {
-	// the decision to make the pointers start from the middle rows is
-	// because it provides the easiest way to detect when we have reached the end
-	// no matter if the number of rows is odd or even
 	Node *pt = NW; // pointer top
 	Node *pb = NW; // pointer bottom
 	int rows = Length() / cols;
@@ -287,8 +305,12 @@ void Chain::FlipVertical(unsigned int cols)
 			pb = pb->next;
 		}
 	}
-	for (int x = 0; true; x++)
+	bool reachedLastCol = false;
+	for (int x = 0; !reachedLastCol; x++)
 	{
+		// if the next col is the last col, set reachedLastCol
+		if (pb->next == NULL)
+			reachedLastCol = true;
 		// if pt and pb reaches a new column
 		if (x == cols)
 		{
@@ -313,9 +335,6 @@ void Chain::FlipVertical(unsigned int cols)
 		// move pt and pb to the right
 		pt = pt->next;
 		pb = pb->next;
-		// break if the end has been reached
-		if (pb == NULL)
-			break;
 	}
 }
 

@@ -156,37 +156,55 @@ void Chain::Reverse()
 void Chain::FlipHorizontal(unsigned int cols)
 {
 	unsigned rows = Length() / cols;
+	// keeps a copy of NW because we won't be able
+	// to find it after we're done with the first row
+	// (unless we get a pointer to come all the way back)
 	Node *nwCopy;
+	// for every row
 	while (rows > 0)
 	{
+		// set p to the first node of the curr row
 		Node *p = NW;
+		// remember the last node of the prev row before moving p
 		Node *lastOfPrevRow = p->prev;
 		// move p to the last node of the curr row
 		for (unsigned i = 1; i < cols; i++)
 			p = p->next;
+		// remember the first node of the next row before pointer reassignments
 		Node *firstOfNextRow = p->next;
 		// set SE to the last node of the curr row
 		SE = p;
+		// set both ends of the row to NULL
 		SE->next = NULL;
 		NW->prev = NULL;
+		// reverse the current row
 		Reverse();
+		// if this is the first row, copy down NW
 		if (rows == Length() / cols)
 			nwCopy = NW;
+		// if there is no next row, set SE, break
 		if (firstOfNextRow == NULL)
 		{
 			SE->next = NULL;
 			break;
 		}
+		// assign SE->next to the last node of the next row
+		// because when the next row is flipped,
+		// the last node will become the first node
 		Node *lastOfNextRow = firstOfNextRow;
 		for (unsigned i = 1; i < cols; i++)
 			lastOfNextRow = lastOfNextRow->next;
 		SE->next = lastOfNextRow;
+		// set NW->prev to the last node of the prev row
 		NW->prev = lastOfPrevRow;
 		// set NW to the first node of the next row
 		NW = firstOfNextRow;
+		// one row done!
 		rows -= 1;
 	}
+	// set NW to what it should be
 	NW = nwCopy;
+	// flip all node data
 	FlipAll('h');
 }
 

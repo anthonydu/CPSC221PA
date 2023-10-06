@@ -156,8 +156,8 @@ void Chain::FlipHorizontal(unsigned int cols)
 	bool reachedLastRow = false;
 	Node *pl = NW; // pointer left
 	Node *pr = NW; // pointer right
-	// move pr to the right most node of the first row
 	for (int i = 0; i < cols - 1; i++)
+	// move pr to the right most node of the first row
 		pr = pr->next;
 	while (true)
 	{
@@ -211,7 +211,34 @@ void Chain::FlipHorizontal(unsigned int cols)
 		pl = pl->next;
 		pr = pr->prev;
 	}
+
+	// if(!NW) return;
+	// int rows = length_/cols * (length_%cols !=0);
+
+	// Node* temp=NW, *thisRow, *lastRow=NULL;
+	// for(int l = 0; l<length_; l++){
+	// 	if(l== cols-1) NW=temp;
+	// 	if(l==(rows-1)*cols) SE=temp;
+
+	// 	Node* n =temp->next;
+	// 	temp->next = temp->prev;
+	// 	temp->prev = n;
+	// 	temp->data.FlipHorizontal();
+
+	// 	if(l%cols == 0)
+	// 		thisRow = temp;
+	// 	if((l+1)%cols==0){
+	// 		temp->prev = lastRow;
+	// 		if(lastRow) lastRow->next = temp;
+	// 		lastRow = thisRow;
+	// 		lastRow->next = n;
+	// 	}
+
+	// 	temp = n;
+
+	// }
 }
+	
 
 /**
  * Rearranges the Node structure and internal pixel data to be flipped over a horizontal axis.

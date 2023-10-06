@@ -267,4 +267,50 @@ void TestChain()
 	o.writeToFile("images-output/chain-output/other.png");
 	PNG c = copy.Render(4, true);
 	c.writeToFile("images-output/chain-output/copy.png");
+
+	PNG tall = other.Render(1, true);
+	tall.writeToFile("images-output/chain-output/tall.png");
+	PNG zero = other.Render(0, true);
+	zero.writeToFile("images-output/chain-output/zero.png");
+	PNG wide = other.Render(10, true);
+	wide.writeToFile("images-output/chain-output/wide.png");
+
+	Chain chain;
+	chain = Chain(alphabetpng, 40);
+	chain.FlipHorizontal(1);
+	chain.Render(1, true).writeToFile("images-output/chain-output/h1.png");
+	chain = Chain(alphabetpng, 40);
+	chain.FlipVertical(1);
+	chain.Render(1, true).writeToFile("images-output/chain-output/v1.png");
+	chain = Chain(alphabetpng, 40);
+	chain.FlipHorizontal(2);
+	chain.Render(2, true).writeToFile("images-output/chain-output/h2.png");
+	chain = Chain(alphabetpng, 40);
+	chain.FlipVertical(2);
+	chain.Render(2, true).writeToFile("images-output/chain-output/v2.png");
+	chain = Chain(alphabetpng, 40);
+	chain.FlipHorizontal(3);
+	chain.Render(3, true).writeToFile("images-output/chain-output/h3.png");
+	chain = Chain(alphabetpng, 40);
+	chain.FlipVertical(3);
+	chain.Render(3, true).writeToFile("images-output/chain-output/v3.png");
+	chain = Chain(alphabetpng, 40);
+	chain.FlipHorizontal(6);
+	chain.Render(6, true).writeToFile("images-output/chain-output/h6.png");
+	chain = Chain(alphabetpng, 40);
+	chain.FlipVertical(6);
+	chain.Render(6, true).writeToFile("images-output/chain-output/v6.png");
+
+	Chain one(alphabetpng, 20);
+	one.Render(6, true).writeToFile("images-output/chain-output/one.png");
+
+	Chain newChain;
+	Block block;
+	block.Build(alphabetpng, 0, 0, 40);
+	newChain.InsertBack(block);
+	newChain.FlipHorizontal(1);
+	newChain.Render(1, true).writeToFile("images-output/chain-output/1h.png");
+	newChain.FlipHorizontal(1);
+	newChain.FlipVertical(1);
+	newChain.Render(1, true).writeToFile("images-output/chain-output/1v.png");
 }

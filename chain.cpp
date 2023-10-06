@@ -63,7 +63,7 @@ Chain::Chain(PNG &img, unsigned int nodedimension)
  **/
 PNG Chain::Render(unsigned int cols, bool full)
 {
-	if (IsEmpty() || cols == 0)
+	if (!cols)
 		return PNG();
 	int rows = Length() / cols + (Length() % cols == 0 ? 0 : 1);
 	PNG img(full ? cols * NodeDimension() : cols, full ? rows * NodeDimension() : rows);

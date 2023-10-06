@@ -270,8 +270,6 @@ void TestChain()
 
 	PNG tall = other.Render(1, true);
 	tall.writeToFile("images-output/chain-output/tall.png");
-	PNG zero = other.Render(0, true);
-	zero.writeToFile("images-output/chain-output/zero.png");
 	PNG wide = other.Render(10, true);
 	wide.writeToFile("images-output/chain-output/wide.png");
 

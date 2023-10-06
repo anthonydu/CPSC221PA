@@ -187,6 +187,7 @@ void Chain::FlipHorizontal(unsigned int cols)
 		rows -= 1;
 	}
 	NW = nwCopy;
+	FlipAll('h');
 }
 
 /**
@@ -211,6 +212,8 @@ void Chain::FlipVertical(unsigned int cols)
 {
 	Reverse();
 	FlipHorizontal(cols);
+	FlipAll('h');
+	FlipAll('v');
 }
 
 /**
@@ -277,4 +280,17 @@ int Chain::NodeDimension()
 		return -1;
 	}
 	return NW->data.Dimension();
+}
+
+void Chain::FlipAll(char direction)
+{
+	Node *p = NW;
+	while (p)
+	{
+		if (direction == 'h')
+			p->data.FlipHorizontal();
+		else
+			p->data.FlipVertical();
+		p = p->next;
+	}
 }

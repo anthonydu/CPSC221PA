@@ -10,3 +10,5 @@
  */
 
 int NodeDimension();
+
+void FlipAll(char direction);

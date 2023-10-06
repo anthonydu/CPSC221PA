@@ -28,9 +28,9 @@ Chain::Chain(PNG &img, unsigned int nodedimension)
 	int rows = img.height() / nodedimension;
 	Node *prev = NULL;
 	Node *node;
-	for (int x = 0; x < cols; x++)
+	for (int y = 0; y < rows; y++)
 	{
-		for (int y = 0; y < rows; y++)
+		for (int x = 0; x < cols; x++)
 		{
 			Block block;
 			block.Build(img, x * nodedimension, y * nodedimension, nodedimension);

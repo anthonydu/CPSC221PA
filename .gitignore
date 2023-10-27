@@ -8,12 +8,12 @@
 
 !*.hpp
 
+!*.png
+
 !Makefile
 
 !cs221util
 
-!cs221util/**
+!cs221util/*
 
 !images
-
-!images/**

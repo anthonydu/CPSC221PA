@@ -14,9 +14,7 @@
 template<class T>
 void Stack<T>::push(T newItem)
 {
-    /**
-     * @todo Your code here!
-     */
+    return myStack.pushR(newItem);
 }
 
 /**
@@ -34,7 +32,7 @@ T Stack<T>::pop()
     /**
      * @todo Your code here! 
      */
-    
+    return myStack.popR();
 }
 
 /**
@@ -51,6 +49,7 @@ T Stack<T>::peek()
     /**
      * @todo Your code here! 
      */
+    return myStack.peekR();
 }
 
 /**
@@ -66,4 +65,5 @@ bool Stack<T>::isEmpty() const
     /**
      * @todo Your code here!
      */
+    return myStack.isEmpty();
 }

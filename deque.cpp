@@ -5,11 +5,7 @@
  */
 
 template <class T>
-Deque<T>::Deque(){
-
-/* YOUR CODE HERE! */
-
-}
+Deque<T>::Deque() {}
 
 /**
  * Adds the parameter object to the right of the Deque.
@@ -17,28 +13,31 @@ Deque<T>::Deque(){
  * @param newItem object to be added to the Deque.
  */
 template <class T>
-void Deque<T>::pushR(T newItem)
-{
-    /**
-     * @todo Your code here!
-     */
-    return data.push_back(newItem);
+void Deque<T>::pushR(T newItem) {
+  /**
+   * @todo Your code here!
+   */
+  data.push_back(newItem);
+  n2 = data.back();
 }
 
 /**
  * Removes the object at the left of the Deque, and returns it to the
  * caller.
  *
- * See .h file for implementation notes. 
+ * See .h file for implementation notes.
  *
  * @return The item that used to be at the left of the Deque.
  */
 template <class T>
-T Deque<T>::popL()
-{
-    /**
-     * @todo Your code here! 
-     */
+T Deque<T>::popL() {
+  /**
+   * @todo Your code here!
+   */
+  T left = data.front();
+  data.erase(data.begin());
+  n1 = data.front();
+  return left;
 }
 /**
  * Removes the object at the right of the Deque, and returns it to the
@@ -47,17 +46,15 @@ T Deque<T>::popL()
  * @return The item that used to be at the right of the Deque.
  */
 template <class T>
-T Deque<T>::popR()
-{
-    /**
-     * @todo Your code here! You will need to replace the following line.
-     */
-    assert(!isEmpty());
-    T ret = data[data.size()-1];
-    data.pop_back();
-    data.resize(data.size()-1);
-    return ret;
-
+T Deque<T>::popR() {
+  /**
+   * @todo Your code here! You will need to replace the following line.
+   */
+  assert(!isEmpty());
+  T right = data.back();
+  data.pop_back();
+  n1 = data.back();
+  return right;
 }
 
 /**
@@ -67,11 +64,11 @@ T Deque<T>::popR()
  * @return The item at the front of the deque.
  */
 template <class T>
-T Deque<T>::peekL()
-{
-    /**
-     * @todo Your code here! 
-     */
+T Deque<T>::peekL() {
+  /**
+   * @todo Your code here!
+   */
+  return data.front();
 }
 
 /**
@@ -81,14 +78,11 @@ T Deque<T>::peekL()
  * @return the value of The item at the right of the deque.
  */
 template <class T>
-T Deque<T>::peekR()
-{
-    /**
-     * @todo Your code here! 
-     */
-    assert(!isEmpty());
-    auto end = data.end();
-    return *end;
+T Deque<T>::peekR() {
+  /**
+   * @todo Your code here!
+   */
+  return data.back();
 }
 
 /**
@@ -97,10 +91,9 @@ T Deque<T>::peekR()
  * @return bool which is true if the Deque is empty, false otherwise.
  */
 template <class T>
-bool Deque<T>::isEmpty() const
-{
-    /**
-     * @todo Your code here! 
-     */
-    return data.size()== 0;
+bool Deque<T>::isEmpty() const {
+  /**
+   * @todo Your code here!
+   */
+  return data.empty();
 }

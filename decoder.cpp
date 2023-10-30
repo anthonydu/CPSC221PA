@@ -108,10 +108,14 @@ void decoder::setGrey(PNG& im, pair<int, int> loc) {
   pixel->b = 2 * (pixel->b / 4);
 }
 
-pair<int, int> decoder::findSpot() { /* YOUR CODE HERE */
+pair<int, int> decoder::findSpot() {
+  /* YOUR CODE HERE */
+  return pathPts.back();
 }
 
-int decoder::pathLength() { /* YOUR CODE HERE */
+int decoder::pathLength() {
+  /* YOUR CODE HERE */
+  return pathPts.size();
 }
 
 bool decoder::good(vector<vector<bool>>& v, vector<vector<int>>& d,

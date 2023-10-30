@@ -7,6 +7,8 @@
 template <class T>
 Deque<T>::Deque() {
   /* YOUR CODE HERE */
+  n1 = 0;
+  n2 = 0;
 }
 
 /**
@@ -19,7 +21,12 @@ void Deque<T>::pushR(T newItem) {
   /**
    * @todo Your code here!
    */
-  data.push_back(newItem);
+  if (n2 == data.size()) {
+    data.push_back(newItem);
+  } else {
+    data[n2] = newItem;
+  }
+  n2 += 1;
 }
 
 /**
@@ -35,8 +42,17 @@ T Deque<T>::popL() {
   /**
    * @todo Your code here!
    */
-  T left = data.front();
-  data.erase(data.begin());
+  T left = peekL();
+  n1 += 1;
+  if (n2 - n1 <= n1) {
+    vector<T> newData;
+    for (int i = n1; i < n2; i++) {
+      newData.push_back(data[i]);
+    }
+    data = newData;
+    n1 = 0;
+    n2 = data.size();
+  }
   return left;
 }
 /**
@@ -50,8 +66,17 @@ T Deque<T>::popR() {
   /**
    * @todo Your code here! You will need to replace the following line.
    */
-  T right = data.back();
-  data.pop_back();
+  T right = peekR();
+  n2 -= 1;
+  if (n2 - n1 <= n1) {
+    vector<T> newData;
+    for (int i = n1; i < n2; i++) {
+      newData.push_back(data[i]);
+    }
+    data = newData;
+    n1 = 0;
+    n2 = data.size();
+  }
   return right;
 }
 
@@ -66,7 +91,7 @@ T Deque<T>::peekL() {
   /**
    * @todo Your code here!
    */
-  return data.front();
+  return data[n1];
 }
 
 /**
@@ -80,7 +105,7 @@ T Deque<T>::peekR() {
   /**
    * @todo Your code here!
    */
-  return data.back();
+  return data[n2 - 1];
 }
 
 /**
@@ -93,5 +118,5 @@ bool Deque<T>::isEmpty() const {
   /**
    * @todo Your code here!
    */
-  return data.empty();
+  return n1 == n2;
 }

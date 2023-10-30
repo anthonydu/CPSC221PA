@@ -5,7 +5,9 @@
  */
 
 template <class T>
-Deque<T>::Deque() {}
+Deque<T>::Deque() {
+  /* YOUR CODE HERE */
+}
 
 /**
  * Adds the parameter object to the right of the Deque.
@@ -18,7 +20,6 @@ void Deque<T>::pushR(T newItem) {
    * @todo Your code here!
    */
   data.push_back(newItem);
-  n2 = data.back();
 }
 
 /**
@@ -36,7 +37,6 @@ T Deque<T>::popL() {
    */
   T left = data.front();
   data.erase(data.begin());
-  n1 = data.front();
   return left;
 }
 /**
@@ -53,7 +53,6 @@ T Deque<T>::popR() {
   assert(!isEmpty());
   T right = data.back();
   data.pop_back();
-  n1 = data.back();
   return right;
 }
 

@@ -45,11 +45,10 @@ T Deque<T>::popL() {
   T left = peekL();
   n1 += 1;
   if (n2 - n1 <= n1) {
-    vector<T> newData;
     for (int i = n1; i < n2; i++) {
-      newData.push_back(data[i]);
+      data[i - n1] = data[i];
     }
-    data = newData;
+    data.resize(n2 - n1);
     n1 = 0;
     n2 = data.size();
   }
@@ -69,11 +68,10 @@ T Deque<T>::popR() {
   T right = peekR();
   n2 -= 1;
   if (n2 - n1 <= n1) {
-    vector<T> newData;
     for (int i = n1; i < n2; i++) {
-      newData.push_back(data[i]);
+      data[i - n1] = data[i];
     }
-    data = newData;
+    data.resize(n2 - n1);
     n1 = 0;
     n2 = data.size();
   }

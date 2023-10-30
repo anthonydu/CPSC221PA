@@ -50,7 +50,6 @@ T Deque<T>::popR() {
   /**
    * @todo Your code here! You will need to replace the following line.
    */
-  assert(!isEmpty());
   T right = data.back();
   data.pop_back();
   return right;

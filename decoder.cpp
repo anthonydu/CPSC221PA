@@ -39,8 +39,8 @@ decoder::decoder(const PNG& tm, pair<int, int> s) : start(s), mapImg(tm) {
   }
   pair<int, int> treasure;
   int maxDistance = 0;
-  for (int x = 0; x < img.width(); x++) {
-    for (int y = 0; y < img.height(); y++) {
+  for (int y = 0; y < img.height(); y++) {
+    for (int x = 0; x < img.width(); x++) {
       if (path[x][y].size() > maxDistance) {
         maxDistance = path[x][y].size();
         treasure = pair<int, int>(x, y);
@@ -63,7 +63,41 @@ PNG decoder::renderSolution() {
 
 PNG decoder::renderMaze() {
   /* YOUR CODE HERE */
-  return PNG();
+  PNG img = mapImg;
+  vector<vector<bool>> visited;
+  vector<vector<int>> distance;
+  for (int i = 0; i < img.width(); i++) {
+    visited.push_back(vector<bool>(img.height(), false));
+    distance.push_back(vector<int>(img.height()));
+  }
+  Queue<pair<int, int>> q;
+  visited[start.first][start.second] = true;
+  distance[start.first][start.second] = 0;
+  setGrey(img, start);
+  q.enqueue(start);
+  pair<int, int> curr;
+  while (!q.isEmpty()) {
+    curr = q.peek();
+    q.dequeue();
+    for (auto p : neighbors(curr)) {
+      if (good(visited, distance, curr, p)) {
+        visited[p.first][p.second] = true;
+        distance[p.first][p.second] = distance[curr.first][curr.second] + 1;
+        setGrey(img, p);
+        q.enqueue(p);
+      }
+    }
+  }
+  for (int i = 0; i < 7; i++) {
+    for (int j = 0; j < 7; j++) {
+      if (start.first - 3 + i >= 0 && start.second - 3 + j >= 0) {
+        img.getPixel(start.first - 3 + i, start.second - 3 + j)->r = 255;
+        img.getPixel(start.first - 3 + i, start.second - 3 + j)->g = 0;
+        img.getPixel(start.first - 3 + i, start.second - 3 + j)->b = 0;
+      }
+    }
+  }
+  return img;
 }
 
 void decoder::setGrey(PNG& im, pair<int, int> loc) {

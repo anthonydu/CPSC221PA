@@ -8,8 +8,6 @@
 
 !*.hpp
 
-!*.png
-
 !Makefile
 
 !cs221util
@@ -17,3 +15,9 @@
 !cs221util/*
 
 !images
+
+!images/**
+
+!output-images
+
+!.gitkeep

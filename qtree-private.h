@@ -4,10 +4,10 @@
  *              CPSC 221 PA3
  *
  *              SUBMIT THIS FILE.
- * 
+ *
  *				Simply declare your function prototypes here.
  *              No other scaffolding is necessary.
  */
 
 // begin your declarations below
-
+void Render(const PNG&, const Node*) const;

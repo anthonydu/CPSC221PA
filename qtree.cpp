@@ -1,7 +1,7 @@
 /**
  * @file qtree.cpp
- * @description student implementation of QTree class used for storing image data
- *              CPSC 221 PA3
+ * @description student implementation of QTree class used for storing image
+ * data CPSC 221 PA3
  *
  *              SUBMIT THIS FILE
  */
@@ -43,8 +43,12 @@
  * region and do not overlap.
  */
 QTree::QTree(const PNG& imIn) {
-	// ADD YOUR IMPLEMENTATION BELOW
-	
+  // ADD YOUR IMPLEMENTATION BELOW
+  width = imIn.width();
+  height = imIn.height();
+  root = BuildNode(imIn,
+                   pair<unsigned int, unsigned int>(0, 0),
+                   pair<unsigned int, unsigned int>(width - 1, height - 1));
 }
 
 /**
@@ -56,8 +60,7 @@ QTree::QTree(const PNG& imIn) {
  * @param rhs The right hand side of the assignment statement.
  */
 QTree& QTree::operator=(const QTree& rhs) {
-	// ADD YOUR IMPLEMENTATION BELOW
-	
+  // ADD YOUR IMPLEMENTATION BELOW
 }
 
 /**
@@ -73,8 +76,10 @@ QTree& QTree::operator=(const QTree& rhs) {
  * @pre scale > 0
  */
 PNG QTree::Render(unsigned int scale) const {
-	// Replace the line below with your implementation
-	return PNG();
+  // Replace the line below with your implementation
+  PNG img(width, height);
+  Render(img, root);
+  return img;
 }
 
 /**
@@ -88,11 +93,11 @@ PNG QTree::Render(unsigned int scale) const {
  * You may want a recursive helper function for this one.
  *
  * @param tolerance maximum RGBA distance to qualify for pruning
- * @pre this tree has not previously been pruned, nor is copied from a previously pruned tree.
+ * @pre this tree has not previously been pruned, nor is copied from a
+ * previously pruned tree.
  */
 void QTree::Prune(double tolerance) {
-	// ADD YOUR IMPLEMENTATION BELOW
-	
+  // ADD YOUR IMPLEMENTATION BELOW
 }
 
 /**
@@ -106,12 +111,11 @@ void QTree::Prune(double tolerance) {
  *  null eastern children
  *  (i.e. after flipping, a node's NW and SW pointers may be null, but
  *  have non-null NE and SE)
- * 
+ *
  *  You may want a recursive helper function for this one.
  */
 void QTree::FlipHorizontal() {
-	// ADD YOUR IMPLEMENTATION BELOW
-	
+  // ADD YOUR IMPLEMENTATION BELOW
 }
 
 /**
@@ -132,8 +136,7 @@ void QTree::FlipHorizontal() {
  *  You may want a recursive helper function for this one.
  */
 void QTree::RotateCCW() {
-	// ADD YOUR IMPLEMENTATION BELOW
-	
+  // ADD YOUR IMPLEMENTATION BELOW
 }
 
 /**
@@ -141,9 +144,8 @@ void QTree::RotateCCW() {
  * current QTree object. Complete for PA3.
  * You may want a recursive helper function for this one.
  */
-void QTree:: Clear() {
-	// ADD YOUR IMPLEMENTATION BELOW
-	
+void QTree::Clear() {
+  // ADD YOUR IMPLEMENTATION BELOW
 }
 
 /**
@@ -153,8 +155,7 @@ void QTree:: Clear() {
  * @param other The QTree to be copied.
  */
 void QTree::Copy(const QTree& other) {
-	// ADD YOUR IMPLEMENTATION BELOW
-	
+  // ADD YOUR IMPLEMENTATION BELOW
 }
 
 /**
@@ -164,12 +165,72 @@ void QTree::Copy(const QTree& other) {
  * @param ul upper left point of current node's rectangle.
  * @param lr lower right point of current node's rectangle.
  */
-Node* QTree::BuildNode(const PNG& img, pair<unsigned int, unsigned int> ul, pair<unsigned int, unsigned int> lr) {
-	// Replace the line below with your implementation
-	return nullptr;
+Node* QTree::BuildNode(const PNG& img, pair<unsigned int, unsigned int> ul,
+                       pair<unsigned int, unsigned int> lr) {
+  // Replace the line below with your implementation
+  auto min_x = ul.first;
+  auto min_y = ul.second;
+  if (ul == lr) return new Node(ul, lr, *(img.getPixel(min_x, min_y)));
+  auto max_x = lr.first;
+  auto max_y = lr.second;
+  auto mid_x = min_x + (max_x - min_x) / 2;
+  auto mid_y = min_y + (max_y - min_y) / 2;
+  Node* NW = nullptr;
+  Node* NE = nullptr;
+  Node* SW = nullptr;
+  Node* SE = nullptr;
+  int num_children = 1;
+  NW = BuildNode(img,
+                 pair<unsigned int, unsigned int>(min_x, min_y),
+                 pair<unsigned int, unsigned int>(mid_x, mid_y));
+  if (min_x != max_x) {
+    num_children++;
+    NE = BuildNode(img,
+                   pair<unsigned int, unsigned int>(mid_x + 1, min_y),
+                   pair<unsigned int, unsigned int>(max_x, mid_y));
+  }
+  if (min_y != max_y) {
+    num_children++;
+    SW = BuildNode(img,
+                   pair<unsigned int, unsigned int>(min_x, mid_y + 1),
+                   pair<unsigned int, unsigned int>(mid_x, max_y));
+  }
+  if (min_x != max_x && min_y != max_y) {
+    num_children++;
+    SE = BuildNode(img,
+                   pair<unsigned int, unsigned int>(mid_x + 1, mid_y + 1),
+                   pair<unsigned int, unsigned int>(max_x, max_y));
+  }
+  auto avg_r = (NW->avg.r + (NE ? NE->avg.r : 0) + (SW ? SW->avg.r : 0)
+                + (SE ? SE->avg.r : 0))
+               / num_children;
+  auto avg_g = (NW->avg.g + (NE ? NE->avg.g : 0) + (SW ? SW->avg.g : 0)
+                + (SE ? SE->avg.g : 0))
+               / num_children;
+  auto avg_b = (NW->avg.b + (NE ? NE->avg.b : 0) + (SW ? SW->avg.b : 0)
+                + (SE ? SE->avg.b : 0))
+               / num_children;
+  Node* node = new Node(ul, lr, RGBAPixel(avg_r, avg_g, avg_b));
+  node->NW = NW;
+  node->NE = NE;
+  node->SW = SW;
+  node->SE = SE;
+  return node;
 }
 
 /*********************************************************/
 /*** IMPLEMENT YOUR OWN PRIVATE MEMBER FUNCTIONS BELOW ***/
 /*********************************************************/
 
+void QTree::Render(const PNG& img, const Node* node) const {
+  if (node->upLeft == node->lowRight) {
+    auto x = node->upLeft.first;
+    auto y = node->upLeft.second;
+    *(img.getPixel(x, y)) = node->avg;
+  } else {
+    Render(img, node->NW);
+    if (node->NE) Render(img, node->NE);
+    if (node->SW) Render(img, node->SW);
+    if (node->SE) Render(img, node->SE);
+  }
+}

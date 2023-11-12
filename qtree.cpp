@@ -77,8 +77,8 @@ QTree& QTree::operator=(const QTree& rhs) {
  */
 PNG QTree::Render(unsigned int scale) const {
   // Replace the line below with your implementation
-  PNG img(width, height);
-  Render(img, root);
+  PNG img(width * scale, height * scale);
+  Render(img, root, scale);
   return img;
 }
 
@@ -222,15 +222,19 @@ Node* QTree::BuildNode(const PNG& img, pair<unsigned int, unsigned int> ul,
 /*** IMPLEMENT YOUR OWN PRIVATE MEMBER FUNCTIONS BELOW ***/
 /*********************************************************/
 
-void QTree::Render(const PNG& img, const Node* node) const {
+void QTree::Render(const PNG& img, const Node* node, unsigned int scale) const {
   if (node->upLeft == node->lowRight) {
-    auto x = node->upLeft.first;
-    auto y = node->upLeft.second;
-    *(img.getPixel(x, y)) = node->avg;
+    auto x = node->upLeft.first * scale;
+    auto y = node->upLeft.second * scale;
+    for (int i = 0; i < scale; i++) {
+      for (int j = 0; j < scale; j++) {
+        *(img.getPixel(x + i, y + j)) = node->avg;
+      }
+    }
   } else {
-    Render(img, node->NW);
-    if (node->NE) Render(img, node->NE);
-    if (node->SW) Render(img, node->SW);
-    if (node->SE) Render(img, node->SE);
+    Render(img, node->NW, scale);
+    if (node->NE) Render(img, node->NE, scale);
+    if (node->SW) Render(img, node->SW, scale);
+    if (node->SE) Render(img, node->SE, scale);
   }
 }

@@ -10,4 +10,4 @@
  */
 
 // begin your declarations below
-void Render(const PNG&, const Node*) const;
+void Render(const PNG&, const Node*, unsigned int) const;

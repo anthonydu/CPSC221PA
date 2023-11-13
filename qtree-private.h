@@ -10,4 +10,15 @@
  */
 
 // begin your declarations below
-void Render(const PNG&, const Node*, unsigned int) const;
+void Render(PNG&, Node*, unsigned int) const;
+
+void Prune(double, Node*);
+
+void Leaves(Node*, vector<Node*>&) const;
+
+unsigned int Area(Node*) const;
+
+unsigned int Area(pair<unsigned int, unsigned int>,
+                  pair<unsigned int, unsigned int>) const;
+
+RGBAPixel Average(Node* [4]) const;

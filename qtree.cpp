@@ -97,7 +97,7 @@ PNG QTree::Render(unsigned int scale) const {
  * previously pruned tree.
  */
 void QTree::Prune(double tolerance) {
-  // ADD YOUR IMPLEMENTATION BELOW
+  Prune(tolerance, root);
 }
 
 /**
@@ -165,7 +165,8 @@ void QTree::Copy(const QTree& other) {
  * @param ul upper left point of current node's rectangle.
  * @param lr lower right point of current node's rectangle.
  */
-Node* QTree::BuildNode(const PNG& img, pair<unsigned int, unsigned int> ul,
+Node* QTree::BuildNode(const PNG& img,
+                       pair<unsigned int, unsigned int> ul,
                        pair<unsigned int, unsigned int> lr) {
   // Replace the line below with your implementation
   auto min_x = ul.first;
@@ -179,38 +180,22 @@ Node* QTree::BuildNode(const PNG& img, pair<unsigned int, unsigned int> ul,
   Node* NE = nullptr;
   Node* SW = nullptr;
   Node* SE = nullptr;
-  int num_children = 1;
   NW = BuildNode(img,
                  pair<unsigned int, unsigned int>(min_x, min_y),
                  pair<unsigned int, unsigned int>(mid_x, mid_y));
-  if (min_x != max_x) {
-    num_children++;
+  if (min_x != max_x)
     NE = BuildNode(img,
                    pair<unsigned int, unsigned int>(mid_x + 1, min_y),
                    pair<unsigned int, unsigned int>(max_x, mid_y));
-  }
-  if (min_y != max_y) {
-    num_children++;
+  if (min_y != max_y)
     SW = BuildNode(img,
                    pair<unsigned int, unsigned int>(min_x, mid_y + 1),
                    pair<unsigned int, unsigned int>(mid_x, max_y));
-  }
-  if (min_x != max_x && min_y != max_y) {
-    num_children++;
+  if (min_x != max_x && min_y != max_y)
     SE = BuildNode(img,
                    pair<unsigned int, unsigned int>(mid_x + 1, mid_y + 1),
                    pair<unsigned int, unsigned int>(max_x, max_y));
-  }
-  auto avg_r = (NW->avg.r + (NE ? NE->avg.r : 0) + (SW ? SW->avg.r : 0)
-                + (SE ? SE->avg.r : 0))
-               / num_children;
-  auto avg_g = (NW->avg.g + (NE ? NE->avg.g : 0) + (SW ? SW->avg.g : 0)
-                + (SE ? SE->avg.g : 0))
-               / num_children;
-  auto avg_b = (NW->avg.b + (NE ? NE->avg.b : 0) + (SW ? SW->avg.b : 0)
-                + (SE ? SE->avg.b : 0))
-               / num_children;
-  Node* node = new Node(ul, lr, RGBAPixel(avg_r, avg_g, avg_b));
+  Node* node = new Node(ul, lr, Average((Node* [4]){NW, NE, SW, SE}));
   node->NW = NW;
   node->NE = NE;
   node->SW = SW;
@@ -222,19 +207,128 @@ Node* QTree::BuildNode(const PNG& img, pair<unsigned int, unsigned int> ul,
 /*** IMPLEMENT YOUR OWN PRIVATE MEMBER FUNCTIONS BELOW ***/
 /*********************************************************/
 
-void QTree::Render(const PNG& img, const Node* node, unsigned int scale) const {
-  if (node->upLeft == node->lowRight) {
-    auto x = node->upLeft.first * scale;
-    auto y = node->upLeft.second * scale;
-    for (int i = 0; i < scale; i++) {
-      for (int j = 0; j < scale; j++) {
-        *(img.getPixel(x + i, y + j)) = node->avg;
+unsigned int QTree::Area(pair<unsigned int, unsigned int> coord1,
+                         pair<unsigned int, unsigned int> coord2) const {
+  int x1 = coord1.first;
+  int y1 = coord1.second;
+  int x2 = coord2.first;
+  int y2 = coord2.second;
+  return (abs(x1 - x2) + 1) * (abs(y1 - y2) + 1);
+}
+
+unsigned int QTree::Area(Node* node) const {
+  if (!node) return 0;
+  return Area(node->upLeft, node->lowRight);
+}
+
+RGBAPixel QTree::Average(Node* nodes[4]) const {
+  int sum_r = 0;
+  int sum_g = 0;
+  int sum_b = 0;
+  int total_area = 0;
+  for (int i = 0; i < 4; i++) {
+    Node* node = nodes[i];
+    sum_r += (node ? node->avg.r * Area(node) : 0);
+    sum_g += (node ? node->avg.g * Area(node) : 0);
+    sum_b += (node ? node->avg.b * Area(node) : 0);
+    total_area += Area(node);
+  }
+  int avg_r = sum_r / total_area;
+  int avg_g = sum_g / total_area;
+  int avg_b = sum_b / total_area;
+  return RGBAPixel(avg_r, avg_g, avg_b);
+}
+
+void QTree::Render(PNG& img, Node* node, unsigned int scale) const {
+  if (!node) return;
+  auto min_x = node->upLeft.first;
+  auto min_y = node->upLeft.second;
+  auto max_x = node->lowRight.first;
+  auto max_y = node->lowRight.second;
+  for (auto x = min_x; x <= max_x; x++) {
+    for (auto y = min_y; y <= max_y; y++) {
+      for (unsigned int i = 0; i < scale; i++) {
+        for (unsigned int j = 0; j < scale; j++) {
+          *(img.getPixel(x * scale + i, y * scale + j)) = node->avg;
+        }
       }
     }
-  } else {
-    Render(img, node->NW, scale);
-    if (node->NE) Render(img, node->NE, scale);
-    if (node->SW) Render(img, node->SW, scale);
-    if (node->SE) Render(img, node->SE, scale);
   }
+  Render(img, node->NW, scale);
+  Render(img, node->NE, scale);
+  Render(img, node->SW, scale);
+  Render(img, node->SE, scale);
 }
+
+void QTree::Prune(double tolerance, Node* node) {
+  if (!node) return;
+  vector<Node*> leaves;
+  Leaves(node, leaves);
+  bool prunable = true;
+  for (Node* leaf : leaves) {
+    if (node->avg.distanceTo(leaf->avg) >= tolerance) {
+      prunable = false;
+    }
+  }
+  if (prunable) {
+    node->NW = nullptr;
+    node->NE = nullptr;
+    node->SW = nullptr;
+    node->SE = nullptr;
+  }
+  Prune(tolerance, node->NW);
+  Prune(tolerance, node->NE);
+  Prune(tolerance, node->SW);
+  Prune(tolerance, node->SE);
+}
+
+void QTree::Leaves(Node* node, vector<Node*>& leaves) const {
+  if (!node) return;
+  if (node->upLeft == node->lowRight) {
+    leaves.push_back(node);
+  }
+  Leaves(node->NW, leaves);
+  Leaves(node->NE, leaves);
+  Leaves(node->SW, leaves);
+  Leaves(node->SE, leaves);
+}
+
+// bool QTree::Prune(double tolerance, Node* node, RGBAPixel avg, bool prunable)
+// {
+//   if (!node) return prunable;
+//   if (node->upLeft == node->lowRight) {
+//     return node->avg.distanceTo(avg) < tolerance;
+//   }
+//   auto b1 = Prune(tolerance, node->NW, node->avg, prunable);
+//   auto b2 = Prune(tolerance, node->NE, node->avg, prunable);
+//   auto b3 = Prune(tolerance, node->SW, node->avg, prunable);
+//   auto b4 = Prune(tolerance, node->SE, node->avg, prunable);
+//   prunable = b1 && b2 && b3 && b4;
+//   if (!prunable) {
+//     if (node->NW && b1) {
+//       node->NW->NW = nullptr;
+//       node->NW->NE = nullptr;
+//       node->NW->SW = nullptr;
+//       node->NW->SE = nullptr;
+//     }
+//     if (node->NE && b2) {
+//       node->NE->NW = nullptr;
+//       node->NE->NE = nullptr;
+//       node->NE->SW = nullptr;
+//       node->NE->SE = nullptr;
+//     }
+//     if (node->SW && b3) {
+//       node->SW->NW = nullptr;
+//       node->SW->NE = nullptr;
+//       node->SW->SW = nullptr;
+//       node->SW->SE = nullptr;
+//     }
+//     if (node->SE && b4) {
+//       node->SE->NW = nullptr;
+//       node->SE->NE = nullptr;
+//       node->SE->SW = nullptr;
+//       node->SE->SE = nullptr;
+//     }
+//   }
+//   return prunable;
+// }

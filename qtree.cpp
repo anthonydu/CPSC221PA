@@ -144,9 +144,7 @@ void QTree::RotateCCW() {
   // ADD YOUR IMPLEMENTATION BELOW
   FlipHorizontal(root);
   FlipDiagonal(root);
-  auto temp = width;
-  width = height;
-  height = temp;
+  swap(width, height);
 }
 
 /**
@@ -340,13 +338,8 @@ void QTree::FlipHorizontal(Node* node) {
   if (!node) return;
   node->upLeft.first = width - node->upLeft.first - 1;
   node->lowRight.first = width - node->lowRight.first - 1;
-  Node* temp;
-  temp = node->NW;
-  node->NW = node->NE;
-  node->NE = temp;
-  temp = node->SW;
-  node->SW = node->SE;
-  node->SE = temp;
+  swap(node->NW, node->NE);
+  swap(node->SW, node->SE);
   FlipHorizontal(node->NW);
   FlipHorizontal(node->NE);
   FlipHorizontal(node->SW);
@@ -355,16 +348,9 @@ void QTree::FlipHorizontal(Node* node) {
 
 void QTree::FlipDiagonal(Node* node) {
   if (!node) return;
-  Node* temp1 = node->NE;
-  node->NE = node->SW;
-  node->SW = temp1;
-  unsigned int temp2;
-  temp2 = node->upLeft.first;
-  node->upLeft.first = node->upLeft.second;
-  node->upLeft.second = temp2;
-  temp2 = node->lowRight.first;
-  node->lowRight.first = node->lowRight.second;
-  node->lowRight.second = temp2;
+  swap(node->NE, node->SW);
+  swap(node->upLeft.first, node->upLeft.second);
+  swap(node->lowRight.first, node->lowRight.second);
   FlipDiagonal(node->NW);
   FlipDiagonal(node->NE);
   FlipDiagonal(node->SW);

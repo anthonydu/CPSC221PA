@@ -60,7 +60,9 @@ QTree::QTree(const PNG& imIn) {
  * @param rhs The right hand side of the assignment statement.
  */
 QTree& QTree::operator=(const QTree& rhs) {
-  // ADD YOUR IMPLEMENTATION BELOW
+  Clear();
+  Copy(rhs);
+  return *this;
 }
 
 /**
@@ -145,7 +147,7 @@ void QTree::RotateCCW() {
  * You may want a recursive helper function for this one.
  */
 void QTree::Clear() {
-  // ADD YOUR IMPLEMENTATION BELOW
+  Clear(root);
 }
 
 /**
@@ -155,7 +157,10 @@ void QTree::Clear() {
  * @param other The QTree to be copied.
  */
 void QTree::Copy(const QTree& other) {
-  // ADD YOUR IMPLEMENTATION BELOW
+  root = new Node(other.root->upLeft, other.root->lowRight, other.root->avg);
+  width = other.width;
+  height = other.height;
+  Copy(root, other.root);
 }
 
 /**
@@ -195,7 +200,8 @@ Node* QTree::BuildNode(const PNG& img,
     SE = BuildNode(img,
                    pair<unsigned int, unsigned int>(mid_x + 1, mid_y + 1),
                    pair<unsigned int, unsigned int>(max_x, max_y));
-  Node* node = new Node(ul, lr, Average((Node* [4]){NW, NE, SW, SE}));
+  Node* children[4] = {NW, NE, SW, SE};
+  Node* node = new Node(ul, lr, Average(children));
   node->NW = NW;
   node->NE = NE;
   node->SW = SW;
@@ -217,7 +223,7 @@ unsigned int QTree::Area(pair<unsigned int, unsigned int> coord1,
 }
 
 unsigned int QTree::Area(Node* node) const {
-  if (!node) return 0;
+  if (!node) std::cerr << "Area received nullptr";
   return Area(node->upLeft, node->lowRight);
 }
 
@@ -228,9 +234,10 @@ RGBAPixel QTree::Average(Node* nodes[4]) const {
   int total_area = 0;
   for (int i = 0; i < 4; i++) {
     Node* node = nodes[i];
-    sum_r += (node ? node->avg.r * Area(node) : 0);
-    sum_g += (node ? node->avg.g * Area(node) : 0);
-    sum_b += (node ? node->avg.b * Area(node) : 0);
+    if (!node) continue;
+    sum_r += node->avg.r * Area(node);
+    sum_g += node->avg.g * Area(node);
+    sum_b += node->avg.b * Area(node);
     total_area += Area(node);
   }
   int avg_r = sum_r / total_area;
@@ -293,42 +300,30 @@ void QTree::Leaves(Node* node, vector<Node*>& leaves) const {
   Leaves(node->SE, leaves);
 }
 
-// bool QTree::Prune(double tolerance, Node* node, RGBAPixel avg, bool prunable)
-// {
-//   if (!node) return prunable;
-//   if (node->upLeft == node->lowRight) {
-//     return node->avg.distanceTo(avg) < tolerance;
-//   }
-//   auto b1 = Prune(tolerance, node->NW, node->avg, prunable);
-//   auto b2 = Prune(tolerance, node->NE, node->avg, prunable);
-//   auto b3 = Prune(tolerance, node->SW, node->avg, prunable);
-//   auto b4 = Prune(tolerance, node->SE, node->avg, prunable);
-//   prunable = b1 && b2 && b3 && b4;
-//   if (!prunable) {
-//     if (node->NW && b1) {
-//       node->NW->NW = nullptr;
-//       node->NW->NE = nullptr;
-//       node->NW->SW = nullptr;
-//       node->NW->SE = nullptr;
-//     }
-//     if (node->NE && b2) {
-//       node->NE->NW = nullptr;
-//       node->NE->NE = nullptr;
-//       node->NE->SW = nullptr;
-//       node->NE->SE = nullptr;
-//     }
-//     if (node->SW && b3) {
-//       node->SW->NW = nullptr;
-//       node->SW->NE = nullptr;
-//       node->SW->SW = nullptr;
-//       node->SW->SE = nullptr;
-//     }
-//     if (node->SE && b4) {
-//       node->SE->NW = nullptr;
-//       node->SE->NE = nullptr;
-//       node->SE->SW = nullptr;
-//       node->SE->SE = nullptr;
-//     }
-//   }
-//   return prunable;
-// }
+void QTree::Copy(Node* c, Node* o) {
+  if (o->NW) {
+    c->NW = new Node(o->NW->upLeft, o->NW->lowRight, o->NW->avg);
+    Copy(c->NW, o->NW);
+  }
+  if (o->NE) {
+    c->NE = new Node(o->NE->upLeft, o->NE->lowRight, o->NE->avg);
+    Copy(c->NE, o->NE);
+  }
+  if (o->SW) {
+    c->SW = new Node(o->SW->upLeft, o->SW->lowRight, o->SW->avg);
+    Copy(c->SW, o->SW);
+  }
+  if (o->SE) {
+    c->SE = new Node(o->SE->upLeft, o->SE->lowRight, o->SE->avg);
+    Copy(c->SE, o->SE);
+  }
+}
+
+void QTree::Clear(Node* node) {
+  if (!node) return;
+  Clear(node->NW);
+  Clear(node->NE);
+  Clear(node->SW);
+  Clear(node->SE);
+  delete node;
+}

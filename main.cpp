@@ -22,12 +22,60 @@ void TestBuildRender(unsigned int scale);
 void TestFlipHorizontal();
 void TestRotateCCW();
 void TestPrune(double tol);
+void TestRenderOriginal();
+void TestCopy();
 
 /***********************************/
 /*** MAIN FUNCTION PROGRAM ENTRY ***/
 /***********************************/
 
 int main(int argc, char* argv[]) {
+  TestCopy();
+  TestRenderOriginal();
+  TestBuildRender(1);
+  TestBuildRender(6);
+  TestFlipHorizontal();
+  TestRotateCCW();
+  TestPrune(0.01);
+  TestPrune(0.05);
+
+  return 0;
+}
+
+/*************************************/
+/*** TEST FUNCTION IMPLEMENTATIONS ***/
+/*************************************/
+
+void TestCopy() {
+  cout << "Entered TestCopy" << endl;
+
+  PNG input;
+  input.readFromFile("images-original/kkkk_nnkm-256x224.png");
+
+  cout << "Constructing QTree from image... ";
+  QTree t0(input);
+  cout << "done." << endl;
+
+  cout << "Constructing QTree from QTree... ";
+  QTree t(t0);
+  cout << "done." << endl;
+
+  cout << "Rendering tree to PNG at x1 scale... ";
+  PNG output = t.Render(1);
+  cout << "done." << endl;
+
+  // write output PNG
+  string outfilename = "images-output/kkkk_nnkm-copy_render_x1.png";
+  cout << "Writing rendered PNG to file... ";
+  output.writeToFile(outfilename);
+  cout << "done." << endl;
+
+  cout << "Exiting TestCopy.\n" << endl;
+}
+
+void TestRenderOriginal() {
+  cout << "Entered TestRenderOriginal" << endl;
+
   PNG input;
   input.readFromFile("images-original/kkkk_nnkm-256x224.png");
 
@@ -45,19 +93,8 @@ int main(int argc, char* argv[]) {
   output.writeToFile(outfilename);
   cout << "done." << endl;
 
-  TestBuildRender(1);
-  TestBuildRender(6);
-  TestFlipHorizontal();
-  TestRotateCCW();
-  TestPrune(0.01);
-  TestPrune(0.05);
-
-  return 0;
+  cout << "Exiting TestRenderOriginal.\n" << endl;
 }
-
-/*************************************/
-/*** TEST FUNCTION IMPLEMENTATIONS ***/
-/*************************************/
 
 void TestBuildRender(unsigned int scale) {
   cout << "Entered TestBuildRender, scale: " << scale << endl;

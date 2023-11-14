@@ -22,3 +22,7 @@ unsigned int Area(pair<unsigned int, unsigned int>,
                   pair<unsigned int, unsigned int>) const;
 
 RGBAPixel Average(Node* [4]) const;
+
+void Copy(Node*, Node*);
+
+void Clear(Node*);

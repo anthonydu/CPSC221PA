@@ -338,6 +338,7 @@ void QTree::FlipHorizontal(Node* node) {
   if (!node) return;
   node->upLeft.first = width - node->upLeft.first - 1;
   node->lowRight.first = width - node->lowRight.first - 1;
+  swap(node->upLeft.first, node->lowRight.first);
   swap(node->NW, node->NE);
   swap(node->SW, node->SE);
   FlipHorizontal(node->NW);

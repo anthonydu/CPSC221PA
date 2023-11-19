@@ -206,8 +206,8 @@ Node* QTree::BuildNode(const PNG& img,
     SE = BuildNode(img,
                    pair<unsigned int, unsigned int>(mid_x + 1, mid_y + 1),
                    pair<unsigned int, unsigned int>(max_x, max_y));
-  Node* children[4] = {NW, NE, SW, SE};
-  Node* node = new Node(ul, lr, Average(children));
+  ;
+  Node* node = new Node(ul, lr, Average((Node* [4]){NW, NE, SW, SE}));
   node->NW = NW;
   node->NE = NE;
   node->SW = SW;
@@ -284,6 +284,10 @@ void QTree::Prune(double tolerance, Node* node) {
     }
   }
   if (prunable) {
+    Clear(node->NW);
+    Clear(node->NE);
+    Clear(node->SW);
+    Clear(node->SE);
     node->NW = nullptr;
     node->NE = nullptr;
     node->SW = nullptr;

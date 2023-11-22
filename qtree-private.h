@@ -12,6 +12,10 @@
 // begin your declarations below
 void Render(PNG&, Node*, unsigned int) const;
 
+bool Prunable(Node*, RGBAPixel, double) const;
+
+void Prune(Node*, double);
+
 void Prune(double, Node*);
 
 void Leaves(Node*, vector<Node*>&) const;

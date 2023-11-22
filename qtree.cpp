@@ -101,7 +101,7 @@ PNG QTree::Render(unsigned int scale) const {
  */
 void QTree::Prune(double tolerance) {
   // ADD YOUR IMPLEMENTATION BELOW
-  Prune(tolerance, root);
+  Prune(root, tolerance);
 }
 
 /**
@@ -271,6 +271,39 @@ void QTree::Render(PNG& img, Node* node, unsigned int scale) const {
   Render(img, node->NE, scale);
   Render(img, node->SW, scale);
   Render(img, node->SE, scale);
+}
+
+bool QTree::Prunable(Node* nd, RGBAPixel subRootAvg, double tolerance) const
+{
+  if (nd == nullptr) return true;
+  if (!(nd->NW || nd->NE || nd->SW || nd->SE)) { // if nd is a leaf
+    return (subRootAvg.distanceTo(nd->avg) < tolerance); 
+  } else {
+    bool pruneNW = Prunable(nd->NW, subRootAvg, tolerance);
+    bool pruneNE = Prunable(nd->NE, subRootAvg, tolerance);
+    bool pruneSW = Prunable(nd->SW, subRootAvg, tolerance);
+    bool pruneSE = Prunable(nd->SE, subRootAvg, tolerance);
+    return (pruneNW && pruneNE && pruneSW && pruneSE);
+  }
+}
+
+void QTree::Prune(Node* nd, double tolerance) {
+  if (nd == nullptr) return;
+  if (Prunable(nd, nd->avg, tolerance)) {
+    Clear(nd->NW);
+    Clear(nd->NE);
+    Clear(nd->SW);
+    Clear(nd->SE);
+    nd->NW = NULL;
+    nd->NE = NULL;
+    nd->SW = NULL;
+    nd->SE = NULL;
+  } else {
+    Prune(nd->NW, tolerance);
+    Prune(nd->NE, tolerance);
+    Prune(nd->SW, tolerance);
+    Prune(nd->SE, tolerance);
+  }
 }
 
 void QTree::Prune(double tolerance, Node* node) {
